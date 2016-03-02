@@ -4,6 +4,7 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 	console.log(changeInfo.url);
 	if (tab.url.indexOf('google.com') >= 0) {
 		chrome.pageAction.show(tabId);
+		chrome.tabs.executeScript(null, {file: "getTitle.js"});
 	}
 };
 
