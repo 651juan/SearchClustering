@@ -1,0 +1,33 @@
+{
+  "manifest_version": 2,
+  
+  "name": "Search Clustering",
+  "description": "A Search Clustering Extension",
+  "version": "1.0",
+
+  "icons": {"16": "icons/icon16.png",
+	  "48": "icons/icon48.png",
+				"128": "icons/icon128.png" },
+
+ //Used if extension can work on all websites, Icon on toolbar can have pop up menu
+ //"browser_action": {...},
+ //Located in address bar used when extension can only work on certain pages
+	"page_action": { 
+		"default_icon": {                  
+            "19": "icons/icon19.png",           
+            "38": "icons/icon38.png" 
+          },
+		 "default_title": "Search Clustering",   
+         "default_popup": "popup.html"  
+	},
+
+  "background": {
+	"scripts": ["background.js"],
+	 "persistent": false
+  },
+  
+  "permissions" : [
+	"tabs",
+	"https://www.google.com/"
+	]
+}
