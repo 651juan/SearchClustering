@@ -26,8 +26,17 @@
 	 "persistent": false
   },
   
+  "content_scripts": [
+    {
+		"run_at": "document_end",
+		"matches": ["https://www.google.com/*"],
+		"js": ["mainScript.js"]
+    }
+  ],
+  
   "permissions" : [
 	"tabs",
+	"webNavigation",
 	"https://www.google.com/",
 	"https://www.google.com.mt/"
 	]

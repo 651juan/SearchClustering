@@ -24,7 +24,7 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 			}
 			
 			//Execute extension script
-			chrome.tabs.executeScript(null, {file: "getTitle.js"});
+			//chrome.tabs.executeScript(null, {file: "getTitle.js"});
 		}
 	}
 };
