@@ -6,6 +6,8 @@ var pCheckForParameters = true;
 var pNumOfResults = "num=100";
 var pAutoCompleteOff = "complete=0";
 
+var validURL = false;
+
 //called when tab is changed
 function checkForValidUrl(tabId, changeInfo, tab) {
 	//if url has google in it show extension icon
@@ -46,10 +48,20 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 			}
 			
 			//Execute extension script
-			chrome.tabs.executeScript(null, {file: "mainScript.js"});
+			if(changeInfo.status == "complete") {
+				if(tabURL.indexOf("q=") >=  0){
+					chrome.webNavigation.onDOMContentLoaded.addListener(function(object) {
+						console.log("Background.js: Running MainScript");
+						validURL = false;
+						chrome.tabs.executeScript(null, {file: "mainScript.js"});
+					});
+				}
+			}
 		}
 	}
 };
+
+
 
 //Listen for tab changes
 chrome.tabs.onUpdated.addListener(checkForValidUrl);

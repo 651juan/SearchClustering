@@ -1,12 +1,32 @@
 console.log("In Main Script");
+
+//Get results
 var results = document.getElementsByClassName("g");
+console.log("Found " + results.length + " results.");
+console.log(results);
 
-console.log("No of Results: " + results.length);
-setTitle("Test", results[0]);
-
-
-//console.log(document.getElementsByClassName("g")[0].getElementsByTagName("a")[0].innerText);
-
+if(results.length > 0) {
+	//Array to store each result object
+	var resultObjects = [];
+	
+	for(i = 0; i < results.length; i++) {
+		//Create result Object
+		try{
+		var result = {};
+			result.title = getTitle(results[i]);
+			result.content = getContent(results[i]);
+			//Store result object
+			resultObjects[resultObjects.length] = result;
+		}catch(err) {
+			//result image/video/news
+		}
+	}
+	var jsonstr = JSON.stringify(resultObjects);
+	console.log(jsonstr);
+	localStorage.setItem("storageResults", jsonstr);
+	console.log(JSON.parse(localStorage.getItem("storageResults")));
+}
+ 
 function getTitle(result) {
 	return result.getElementsByClassName("r")[0].innerText;
 }
@@ -23,3 +43,4 @@ function setTitle(newTitle, result) {
 function setContent(newContent, result) {
 	result.getElementsByClassName("st")[0].innerHTML = newContent;
 }
+

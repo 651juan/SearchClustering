@@ -9,9 +9,6 @@
 	  "48": "icons/icon48.png",
 				"128": "icons/icon128.png" },
 
- //Used if extension can work on all websites, Icon on toolbar can have pop up menu
- //"browser_action": {...},
- //Located in address bar used when extension can only work on certain pages
 	"page_action": { 
 		"default_icon": {                  
             "19": "icons/icon19.png",           
@@ -19,6 +16,10 @@
           },
 		 "default_title": "Search Clustering",   
          "default_popup": "popup.html"  
+	},
+	
+	"sandbox": {
+		"pages": ["sandboxPage.html"]
 	},
 
   "background": {
@@ -29,6 +30,7 @@
   "permissions" : [
 	"tabs",
 	"webNavigation",
+	"storage",
 	"*://*.google.com/*"
 	  ]
 }
