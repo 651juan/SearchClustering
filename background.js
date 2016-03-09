@@ -52,7 +52,6 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 				if(tabURL.indexOf("q=") >=  0){
 					chrome.webNavigation.onDOMContentLoaded.addListener(function(object) {
 						console.log("Background.js: Running MainScript");
-						validURL = false;
 						chrome.tabs.executeScript(null, {file: "mainScript.js"});
 					});
 				}
