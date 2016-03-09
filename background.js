@@ -6,7 +6,7 @@ var pCheckForParameters = true;
 var pNumOfResults = "num=100";
 var pAutoCompleteOff = "complete=0";
 
-var validURL = false;
+var googleResults = "";
 
 //called when tab is changed
 function checkForValidUrl(tabId, changeInfo, tab) {
@@ -51,8 +51,6 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 			if(changeInfo.status == "complete") {
 				if(tabURL.indexOf("q=") >=  0){
 					chrome.webNavigation.onDOMContentLoaded.addListener(function(object) {
-						console.log("Background.js: Running MainScript");
-						validURL = false;
 						chrome.tabs.executeScript(null, {file: "mainScript.js"});
 					});
 				}
@@ -63,3 +61,6 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 
 //Listen for tab changes
 chrome.tabs.onUpdated.addListener(checkForValidUrl);
+
+//Listen for data from the content script
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {googleResults = request.data; console.log(googleResults);});

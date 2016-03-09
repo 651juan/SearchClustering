@@ -19,7 +19,7 @@
 	},
 	
 	"sandbox": {
-		"pages": ["popup.html"]
+		"pages": ["sandboxPage.html"]
 	},
 
   "background": {
@@ -30,8 +30,6 @@
   "permissions" : [
 	"tabs",
 	"webNavigation",
-	"storage",
-	"*://*.google.com/*",
-	"*://*.google.com.mt/*"
-	  ]
+	"*://*/*"
+  ]
 }

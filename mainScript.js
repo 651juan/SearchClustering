@@ -21,12 +21,14 @@ if(results.length > 0) {
 			//result image/video/news
 		}
 	}
+	
 	var jsonstr = JSON.stringify(resultObjects);
 	console.log(jsonstr);
-	localStorage.setItem("storageResults", jsonstr);
-	console.log(JSON.parse(localStorage.getItem("storageResults")));
+	
+	//Send the data to background.js
+	chrome.runtime.sendMessage({data: jsonstr}, function(response) {});
 }
- 
+
 function getTitle(result) {
 	return result.getElementsByClassName("r")[0].innerText;
 }
@@ -43,4 +45,3 @@ function setTitle(newTitle, result) {
 function setContent(newContent, result) {
 	result.getElementsByClassName("st")[0].innerHTML = newContent;
 }
-
