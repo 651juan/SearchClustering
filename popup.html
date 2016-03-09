@@ -1,5 +1,10 @@
 <html>
-	<body>
-		<iframe sandbox="allow-same-origin allow-scripts" src=sandboxPage.html id="frame"></iframe>
+	<head>
+		<script src="brython.js" type="text/javascript"></script>
+	</head>
+	<body onload="brython()">
+		<script type="text/python">
+			print("hello world")
+		</script>
 	</body>
 </html>

@@ -61,7 +61,5 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 	}
 };
 
-
-
 //Listen for tab changes
 chrome.tabs.onUpdated.addListener(checkForValidUrl);
