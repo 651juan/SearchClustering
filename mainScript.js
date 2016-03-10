@@ -3,7 +3,7 @@ console.log("In Main Script");
 //Get results
 var results = document.getElementsByClassName("g");
 console.log("Found " + results.length + " results.");
-console.log(results);
+//console.log(results);
 
 if(results.length > 0) {
 	//Array to store each result object

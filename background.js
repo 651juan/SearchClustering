@@ -1,5 +1,7 @@
 //Google URL
 var googleURL =  new RegExp("^(https?:\/\/)?(www.)?(google).*");
+var prevURL;
+var tabURL;
 
 //URL parameters to get 100 results and turns auto complete off
 var pCheckForParameters = true;
@@ -21,7 +23,8 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 				//Check for url changes
 				var URLChanged = false;
 				//Get the URL
-				var tabURL = tab.url;
+				prevURL = tabURL;
+				tabURL = tab.url;
 				
 				//check if ? is at the start of the url before the arameters
 				if(tab.url.indexOf("?") < 0) {
@@ -50,9 +53,14 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 			//Execute extension script
 			if(changeInfo.status == "complete") {
 				if(tabURL.indexOf("q=") >=  0){
-					chrome.webNavigation.onDOMContentLoaded.addListener(function(object) {
+					if(tabURL != prevURL) {
+						console.log("Current URL: "+ tabURL);
+						console.log("Previous URL: " + prevURL);
+						console.log("Executing Main Script");
 						chrome.tabs.executeScript(null, {file: "mainScript.js"});
-					});
+					}else{
+						console.log("Same URL Not Executing Script");
+					}
 				}
 			}
 		}
@@ -62,5 +70,9 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 //Listen for tab changes
 chrome.tabs.onUpdated.addListener(checkForValidUrl);
 
+
 //Listen for data from the content script
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {googleResults = request.data; console.log(googleResults);});
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	googleResults = request.data; 
+	//console.log(googleResults);
+});
