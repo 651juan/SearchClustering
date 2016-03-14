@@ -17,10 +17,6 @@
 		 "default_title": "Search Clustering",   
          "default_popup": "popup.html"  
 	},
-	
-	"sandbox": {
-		"pages": ["sandboxPage.html"]
-	},
 
   "background": {
 	"scripts": ["background.js"],

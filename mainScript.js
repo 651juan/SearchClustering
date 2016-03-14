@@ -24,9 +24,6 @@ if(results.length > 0) {
 	
 	var jsonstr = JSON.stringify(resultObjects);
 	console.log(jsonstr);
-	
-	//Send the data to background.js
-	chrome.runtime.sendMessage({data: jsonstr}, function(response) {});
 }
 
 function getTitle(result) {

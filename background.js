@@ -8,8 +8,6 @@ var pCheckForParameters = true;
 var pNumOfResults = "num=100";
 var pAutoCompleteOff = "complete=0";
 
-var googleResults = "";
-
 //called when tab is changed
 function checkForValidUrl(tabId, changeInfo, tab) {
 	//if url has google in it show extension icon
@@ -69,10 +67,3 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 
 //Listen for tab changes
 chrome.tabs.onUpdated.addListener(checkForValidUrl);
-
-
-//Listen for data from the content script
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-	googleResults = request.data; 
-	//console.log(googleResults);
-});
