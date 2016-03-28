@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+	<script src="no-k-means.js"></script>
+	<script>
+		var text1 = ["i", "love", "to", "go", "to", "the", "beach"];
+		var text2 = ["i", "love", "to", "go", "to", "school"];
+		var text3 = ["i", "am", "a", "boy"];
+		var text4 = ["i", "am", "a", "girl"];
+		var text5 = ["i", "am", "a", "man"];
+		var text6 = ["i", "hate", "studying"];
+		var text7 = ["i", "love", "to", "party"];
+		var text8 = ["i", "love", "to", "party", "and", "i", "love", "to", "dance"];
+		var text9 = ["i", "have", "a", "nice", "car"];
+		var text10 = ["i", "have", "a", "big", "cat"];
+		var text11 = ["i", "need", "food"];
+		var text_list = [text1, text2, text3, text4, text5, text6, text7, text8, text9, text10, text11];
+		var clusters = no_k_means(text_list, 0.9);
+		present_clusters(clusters);
+	</script>
+</body>
+</html>
