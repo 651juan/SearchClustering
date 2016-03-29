@@ -11,6 +11,7 @@ var stopwords = ["a", "about", "above", "above", "across", "after", "afterwards"
 var includeTitleInList = true;
 var removeQueryTerms = true;
 var stopWordsRemoval = true;
+var wordStemming = true;
 
 /*********
 	MAIN
@@ -41,7 +42,7 @@ if(results.length > 0) {
 				var tmpTitle = getTitle(results[i]).toLowerCase();
 				//Remove stop words from title
 				if(stopWordsRemoval) {
-					tmpTitle = removeStopWords(tmpTitle);
+					tmpTitle = removeStopWordsStemm(tmpTitle);
 				}
 				result.title = tmpTitle;
 			}else{
@@ -56,7 +57,7 @@ if(results.length > 0) {
 				var tmpContent = getContent(results[i]).toLowerCase();
 				//Remove stopWords from content
 				if(stopWordsRemoval) {
-					tmpContent = removeStopWords(tmpContent);
+					tmpContent = removeStopWordsStemm(tmpContent);
 				}
 				result.content = tmpContent;
 			}catch(err2){
@@ -142,7 +143,7 @@ function processString(toProcess) {
 }
 
 //Remove the stopwords from a string
-function removeStopWords(toProcess) {
+function removeStopWordsStemm(toProcess) {
 	//Split the string into individual words
 	var words = toProcess.split(" ");
 	
@@ -151,6 +152,12 @@ function removeStopWords(toProcess) {
 	
 	//Go through each word and check if it is a stop word
 	for(var i = 0; i < words.length; i++) {
+		//Stemm the word
+		if(wordStemming) {
+			console.log("original: " + words[i]);
+			words[i] = stemmer(words[i]);
+			console.log("stemmed: " + words[i]);
+		}
 		//If it is not a stop word concat it with the result
 		if(stopwords.indexOf(words[i]) < 0) {
 			result += words[i]+" ";

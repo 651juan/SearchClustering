@@ -60,6 +60,7 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 function injectScript() {
 	if(validURL) {
 			console.log("Background.js: Running MainScript");
+			chrome.tabs.executeScript(null, {file: "porterStemmer.js"});
 			chrome.tabs.executeScript(null, {file: "mainScript.js"});
 	}
 };
