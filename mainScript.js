@@ -168,6 +168,8 @@ function processString(toProcess) {
 
 //Remove the stopwords from a string
 function removeStopWordsStemm(toProcess) {
+	//Get the query terms
+	var queryTerms = getQuery().split(" ");
 	//Split the string into individual words
 	var words = toProcess.split(" ");
 	
@@ -181,6 +183,12 @@ function removeStopWordsStemm(toProcess) {
 		//Stemm the word
 		if(wordStemming) {
 			words[i] = stemmer(words[i]);
+		}
+		//Check query terms again after stemming
+		if(removeQueryTerms){
+			if(queryTerms.indexOf(words[i]) >= 0){
+				continue;
+			}
 		}
 		//If it is not a stop word concat it with the result
 		if(stopwords.indexOf(words[i]) < 0) {
