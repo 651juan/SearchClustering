@@ -1,10 +1,16 @@
 console.log("In Main Script");
 
+/****************
+	Other Attributes
+*****************/
+var stopwords = ["a", "about", "above", "above", "across", "after", "afterwards", "again", "against", "all", "almost", "alone", "along", "already", "also","although","always","am","among", "amongst", "amoungst", "amount",  "an", "and", "another", "any","anyhow","anyone","anything","anyway", "anywhere", "are", "around", "as",  "at", "back","be","became", "because","become","becomes", "becoming", "been", "before", "beforehand", "behind", "being", "below", "beside", "besides", "between", "beyond", "bill", "both", "bottom","but", "by", "call", "can", "cannot", "cant", "co", "con", "could", "couldnt", "cry", "de", "describe", "detail", "do", "done", "down", "due", "during", "each", "eg", "eight", "either", "eleven","else", "elsewhere", "empty", "enough", "etc", "even", "ever", "every", "everyone", "everything", "everywhere", "except", "few", "fifteen", "fify", "fill", "find", "fire", "first", "five", "for", "former", "formerly", "forty", "found", "four", "from", "front", "full", "further", "get", "give", "go", "had", "has", "hasnt", "have", "he", "hence", "her", "here", "hereafter", "hereby", "herein", "hereupon", "hers", "herself", "him", "himself", "his", "how", "however", "hundred", "ie", "if", "in", "inc", "indeed", "interest", "into", "is", "it", "its", "itself", "keep", "last", "latter", "latterly", "least", "less", "ltd", "made", "many", "may", "me", "meanwhile", "might", "mill", "mine", "more", "moreover", "most", "mostly", "move", "much", "must", "my", "myself", "name", "namely", "neither", "never", "nevertheless", "next", "nine", "no", "nobody", "none", "noone", "nor", "not", "nothing", "now", "nowhere", "of", "off", "often", "on", "once", "one", "only", "onto", "or", "other", "others", "otherwise", "our", "ours", "ourselves", "out", "over", "own","part", "per", "perhaps", "please", "put", "rather", "re", "same", "see", "seem", "seemed", "seeming", "seems", "serious", "several", "she", "should", "show", "side", "since", "sincere", "six", "sixty", "so", "some", "somehow", "someone", "something", "sometime", "sometimes", "somewhere", "still", "such", "system", "take", "ten", "than", "that", "the", "their", "them", "themselves", "then", "thence", "there", "thereafter", "thereby", "therefore", "therein", "thereupon", "these", "they", "thickv", "thin", "third", "this", "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "top", "toward", "towards", "twelve", "twenty", "two", "un", "under", "until", "up", "upon", "us", "very", "via", "was", "we", "well", "were", "what", "whatever", "when", "whence", "whenever", "where", "whereafter", "whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which", "while", "whither", "who", "whoever", "whole", "whom", "whose", "why", "will", "with", "within", "without", "would", "yet", "you", "your", "yours", "yourself", "yourselves", "the"];
+
 /************
 	OPTIONS
 ************/
 var includeTitleInList = true;
 var removeQueryTerms = true;
+var stopWordsRemoval = true;
 
 /*********
 	MAIN
@@ -29,11 +35,30 @@ if(results.length > 0) {
 			var result = {};
 			
 			//Set the title,content and url
-			result.title = getTitle(results[i]);
+			//Get Title
+			if(includeTitleInList) {
+				//Convert it to lowercase
+				var tmpTitle = getTitle(results[i]).toLowerCase();
+				//Remove stop words from title
+				if(stopWordsRemoval) {
+					tmpTitle = removeStopWords(tmpTitle);
+				}
+				result.title = tmpTitle;
+			}else{
+				//If title is not included in list just get the title as it is
+				result.title = getTitle(results[i]);
+			}
 			
+			//Get Content
 			//Sometimes results dont have content
 			try{
-				result.content = getContent(results[i]);
+				//Convert it to lowercase
+				var tmpContent = getContent(results[i]).toLowerCase();
+				//Remove stopWords from content
+				if(stopWordsRemoval) {
+					tmpContent = removeStopWords(tmpContent);
+				}
+				result.content = tmpContent;
 			}catch(err2){
 				result.content = "";
 			}
@@ -114,6 +139,25 @@ function processString(toProcess) {
 			}
 		}
 	}
+}
+
+//Remove the stopwords from a string
+function removeStopWords(toProcess) {
+	//Split the string into individual words
+	var words = toProcess.split(" ");
+	
+	//Stores the final result
+	var result = "";
+	
+	//Go through each word and check if it is a stop word
+	for(var i = 0; i < words.length; i++) {
+		//If it is not a stop word concat it with the result
+		if(stopwords.indexOf(words[i]) < 0) {
+			result += words[i]+" ";
+		}
+	}
+	
+	return result;
 }
 
 //Getters Get data from webpage
