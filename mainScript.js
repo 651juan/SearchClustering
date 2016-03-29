@@ -12,6 +12,8 @@ var includeTitleInList = true;
 var removeQueryTerms = true;
 var stopWordsRemoval = true;
 var wordStemming = true;
+var removeSymbols = true;
+var removeNumbers = true;
 
 /*********
 	MAIN
@@ -40,7 +42,15 @@ if(results.length > 0) {
 			if(includeTitleInList) {
 				//Convert it to lowercase
 				var tmpTitle = getTitle(results[i]).toLowerCase();
-				//Remove stop words from title
+				//Remove symbols
+				if(removeSymbols){
+					tmpTitle = tmpTitle.replace(/[-!$%^&*()_×+|·–~—=`{}\[\]:";'<>“”?•▾,.\/]/g, "");
+				}
+				//Remove Numbers
+				if(removeNumbers) {
+					tmpTitle = tmpTitle.replace(/[\d+]/g, "");
+				}
+				//Remove stop words and stemm title
 				if(stopWordsRemoval) {
 					tmpTitle = removeStopWordsStemm(tmpTitle);
 				}
@@ -55,7 +65,15 @@ if(results.length > 0) {
 			try{
 				//Convert it to lowercase
 				var tmpContent = getContent(results[i]).toLowerCase();
-				//Remove stopWords from content
+				//Remove symbols
+				if(removeSymbols){
+					tmpContent = tmpContent.replace(/[-!$%^&*()_×+|·–~—=`{}\[\]:";'<>“”?•▾,.\/]/g, "");
+				}
+				//Remove Numbers
+				if(removeNumbers) {
+					tmpContent = tmpContent.replace(/[\d+]/g, "");
+				}
+				//Remove stopWords and stemm content
 				if(stopWordsRemoval) {
 					tmpContent = removeStopWordsStemm(tmpContent);
 				}
@@ -90,7 +108,9 @@ if(results.length > 0) {
 			var titleArr = resultObjects[i].title.split(" ");
 				
 			for(var j = 0; j < titleArr.length; j++ ) {
-				wordsVector[titleArr[j]]++;
+				if(titleArr[j] != ""){
+					wordsVector[titleArr[j]]++;
+				}
 			}
 		}
 		
@@ -98,7 +118,9 @@ if(results.length > 0) {
 		var contentArr = resultObjects[i].content.split(" ");
 
 		for(var j = 0; j < contentArr.length; j++ ) {
-			wordsVector[contentArr[j]]++;
+			if(contentArr[j] != ""){
+				wordsVector[contentArr[j]]++;
+			}
 		}	
 		
 		//Add the vector to the result object
@@ -125,18 +147,20 @@ function processString(toProcess) {
 	//Go through each word and add it to an object as a new 
 	//attribute initialising its frequency to 0
 	for(var i = 0; i < words.length; i++) {
-		if(removeQueryTerms){
-			//Check if the current word is a query term then define it
-			if(queryTerms.indexOf(words[i]) < 0) {
-				//If it was not defined, define it
-				if(typeof wordsBlankVector[words[i]] == 'undefined'){
-						wordsBlankVector[words[i]] = 0;
+		if(words[i] != ""){
+			if(removeQueryTerms){
+				//Check if the current word is a query term then define it
+				if(queryTerms.indexOf(words[i]) < 0) {
+					//If it was not defined, define it
+					if(typeof wordsBlankVector[words[i]] == 'undefined'){
+							wordsBlankVector[words[i]] = 0;
+					}
 				}
-			}
-		}else{
-			//Just add it if it was not previously defined
-			if(typeof wordsBlankVector[words[i]] == 'undefined'){
-				wordsBlankVector[words[i]] = 0;
+			}else{
+				//Just add it if it was not previously defined
+				if(typeof wordsBlankVector[words[i]] == 'undefined'){
+					wordsBlankVector[words[i]] = 0;
+				}
 			}
 		}
 	}
@@ -152,6 +176,8 @@ function removeStopWordsStemm(toProcess) {
 	
 	//Go through each word and check if it is a stop word
 	for(var i = 0; i < words.length; i++) {
+		//Remove any leading or trailing whiteSpace
+		words[i] = words[i].trim();
 		//Stemm the word
 		if(wordStemming) {
 			words[i] = stemmer(words[i]);
