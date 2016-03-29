@@ -154,9 +154,7 @@ function removeStopWordsStemm(toProcess) {
 	for(var i = 0; i < words.length; i++) {
 		//Stemm the word
 		if(wordStemming) {
-			console.log("original: " + words[i]);
 			words[i] = stemmer(words[i]);
-			console.log("stemmed: " + words[i]);
 		}
 		//If it is not a stop word concat it with the result
 		if(stopwords.indexOf(words[i]) < 0) {
