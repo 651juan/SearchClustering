@@ -129,6 +129,10 @@ if(results.length > 0) {
 	
 	console.log("Results Objects: " + resultObjects.length);
 	console.log(resultObjects);
+	
+	for(var i = 0; i < resultObjects.length; i++ ) {
+		console.log("Vector Length: " + Object.keys(resultObjects[i].data).length);
+	}	
 	//var jsonstr = JSON.stringify(resultObjects);
 	//console.log(jsonstr);
 }
@@ -152,13 +156,13 @@ function processString(toProcess) {
 				//Check if the current word is a query term then define it
 				if(queryTerms.indexOf(words[i]) < 0) {
 					//If it was not defined, define it
-					if(typeof wordsBlankVector[words[i]] == 'undefined'){
+					if(typeof wordsBlankVector[words[i]] === 'undefined'){
 							wordsBlankVector[words[i]] = 0;
 					}
 				}
 			}else{
 				//Just add it if it was not previously defined
-				if(typeof wordsBlankVector[words[i]] == 'undefined'){
+				if(typeof wordsBlankVector[words[i]] === 'undefined'){
 					wordsBlankVector[words[i]] = 0;
 				}
 			}
