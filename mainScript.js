@@ -24,6 +24,7 @@ var allresults = document.getElementsByClassName("g");
 var results = Array();
 // Remove results which have more than one class (i.e. videos, cards, etc.)
 for(var i = allresults.length - 1; i >= 0; i--) {
+    // Only if there is one single class
     if(allresults[i].className == 'g') {
         // Push result in result list
         results.push(allresults[i]);
@@ -136,6 +137,9 @@ if(results.length > 0) {
 	}
 	
 	// Automatically cluster results using SOM and display clusters in the Google Results page
+	//var clusters = clusterResultsUsingSOM(resultObjects);
+	//console.log("Clusters: ", clusters);
+	//clusterGoogleResults(clusters);
 	
 	/* for(var i = 0; i < resultObjects.length; i++ ) {
 		console.log("Vector Length: " + Object.keys(resultObjects[i].data).length);
