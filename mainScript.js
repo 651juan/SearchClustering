@@ -20,9 +20,17 @@ var removeNumbers = true;
 **********/
 
 //Get results
-var results = document.getElementsByClassName("g");
+var allresults = document.getElementsByClassName("g");
+var results = Array();
+// Remove results which have more than one class (i.e. videos, cards, etc.)
+for(var i = allresults.length - 1; i >= 0; i--) {
+    if(allresults[i].className == 'g') {
+        // Push result in result list
+        results.push(allresults[i]);
+    }
+}
+
 console.log("Found " + results.length + " results.");
-//console.log(results);
 
 //Array to store each result object
 var resultObjects = Array(); //Title String, Content String, URL String, Data Object with words and frequencies
@@ -35,13 +43,13 @@ if(results.length > 0) {
 		//Create result Object
 		try{
 			//Create a new result object 
-			var result = {};
-			
+			var result = {id: i, html: results[i]};
 			//Set the title,content and url
 			//Get Title
 			if(includeTitleInList) {
 				//Convert it to lowercase
 				var tmpTitle = getTitle(results[i]).toLowerCase();
+				result.actualTitle = tmpTitle;
 				//Remove symbols
 				if(removeSymbols){
 					tmpTitle = tmpTitle.replace(/[-!$%^&*()_×+|·–~—=`{}\[\]:";'<>“”?•▾,.\/]/g, "");
@@ -127,14 +135,12 @@ if(results.length > 0) {
 		resultObjects[i].data = wordsVector;
 	}
 	
-	console.log("Results Objects: " + resultObjects.length);
-	console.log(resultObjects);
+	// Automatically cluster results using SOM and display clusters in the Google Results page
 	
-	for(var i = 0; i < resultObjects.length; i++ ) {
+	/* for(var i = 0; i < resultObjects.length; i++ ) {
 		console.log("Vector Length: " + Object.keys(resultObjects[i].data).length);
-	}	
-	//var jsonstr = JSON.stringify(resultObjects);
-	//console.log(jsonstr);
+	} */	
+	
 }
 
 
@@ -234,3 +240,26 @@ function setTitle(newTitle, result) {
 function setContent(newContent, result) {
 	result.getElementsByClassName("st")[0].innerHTML = newContent;
 }
+
+function clusterGoogleResults(clusters) {
+	var resultsDiv = document.getElementsByClassName("srg")[0];
+	resultsDiv.innerHTML = "";
+	
+	for (var i = 0; i < clusters.length; i++) {
+		resultsDiv.appendChild(getClusterHtml(i, clusters[i]));
+	};
+};
+
+function getClusterHtml(id, cluster) {
+	var clusterNode = document.createElement("div");
+	
+	cluster.documents.forEach(function(doc) {
+		var documentNode = doc.html;
+		clusterNode.appendChild(documentNode);
+	});
+	
+	var clusterBreak = document.createElement("hr");
+	clusterNode.appendChild(clusterBreak);
+		
+	return clusterNode;
+};
