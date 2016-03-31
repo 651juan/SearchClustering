@@ -4,11 +4,13 @@ console.log("In Main Script");
 	Other Attributes
 *****************/
 var stopwords = ["a", "about", "above", "above", "across", "after", "afterwards", "again", "against", "all", "almost", "alone", "along", "already", "also","although","always","am","among", "amongst", "amoungst", "amount",  "an", "and", "another", "any","anyhow","anyone","anything","anyway", "anywhere", "are", "around", "as",  "at", "back","be","became", "because","become","becomes", "becoming", "been", "before", "beforehand", "behind", "being", "below", "beside", "besides", "between", "beyond", "bill", "both", "bottom","but", "by", "call", "can", "cannot", "cant", "co", "con", "could", "couldnt", "cry", "de", "describe", "detail", "do", "done", "down", "due", "during", "each", "eg", "eight", "either", "eleven","else", "elsewhere", "empty", "enough", "etc", "even", "ever", "every", "everyone", "everything", "everywhere", "except", "few", "fifteen", "fify", "fill", "find", "fire", "first", "five", "for", "former", "formerly", "forty", "found", "four", "from", "front", "full", "further", "get", "give", "go", "had", "has", "hasnt", "have", "he", "hence", "her", "here", "hereafter", "hereby", "herein", "hereupon", "hers", "herself", "him", "himself", "his", "how", "however", "hundred", "ie", "if", "in", "inc", "indeed", "interest", "into", "is", "it", "its", "itself", "keep", "last", "latter", "latterly", "least", "less", "ltd", "made", "many", "may", "me", "meanwhile", "might", "mill", "mine", "more", "moreover", "most", "mostly", "move", "much", "must", "my", "myself", "name", "namely", "neither", "never", "nevertheless", "next", "nine", "no", "nobody", "none", "noone", "nor", "not", "nothing", "now", "nowhere", "of", "off", "often", "on", "once", "one", "only", "onto", "or", "other", "others", "otherwise", "our", "ours", "ourselves", "out", "over", "own","part", "per", "perhaps", "please", "put", "rather", "re", "same", "see", "seem", "seemed", "seeming", "seems", "serious", "several", "she", "should", "show", "side", "since", "sincere", "six", "sixty", "so", "some", "somehow", "someone", "something", "sometime", "sometimes", "somewhere", "still", "such", "system", "take", "ten", "than", "that", "the", "their", "them", "themselves", "then", "thence", "there", "thereafter", "thereby", "therefore", "therein", "thereupon", "these", "they", "thickv", "thin", "third", "this", "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "top", "toward", "towards", "twelve", "twenty", "two", "un", "under", "until", "up", "upon", "us", "very", "via", "was", "we", "well", "were", "what", "whatever", "when", "whence", "whenever", "where", "whereafter", "whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which", "while", "whither", "who", "whoever", "whole", "whom", "whose", "why", "will", "with", "within", "without", "would", "yet", "you", "your", "yours", "yourself", "yourselves", "the"];
+var urlStopwords = ["http", "https", "www", "com", "co", "org", "net", "html", "htm", "php", "aspx"];
 
 /************
 	OPTIONS
 ************/
 var includeTitleInList = true;
+var includeUrlInList = true;
 var removeQueryTerms = true;
 var stopWordsRemoval = true;
 var wordStemming = true;
@@ -45,7 +47,7 @@ if(results.length > 0) {
 		try{
 			//Create a new result object 
 			var result = {id: i, html: results[i]};
-			//Set the title,content and url
+			//Set the title, content and url
 			//Get Title
 			if(includeTitleInList) {
 				//Convert it to lowercase
@@ -67,6 +69,29 @@ if(results.length > 0) {
 			}else{
 				//If title is not included in list just get the title as it is
 				result.title = getTitle(results[i]);
+			}
+			
+			//Get Url
+			if(includeUrlInList) {
+				//Convert it to lowercase
+				var tmpUrl = getURL(results[i]).toLowerCase();
+				result.actualUrl = tmpUrl;
+				//Remove symbols
+				if(removeSymbols){
+					tmpUrl = tmpUrl.replace(/[-!$%^&*()_×+|·–~—=`{}\[\]:";'<>“”?•▾,.\/]/g, " ");
+				}
+				//Remove Numbers
+				if(removeNumbers) {
+					tmpUrl = tmpUrl.replace(/[\d+]/g, "");
+				}
+				//Remove stop words and stemm title
+				if(stopWordsRemoval) {
+					tmpUrl = removeStopWordsStemm(tmpUrl);
+				}
+				result.url = tmpUrl;
+			}else{
+				//If title is not included in list just get the title as it is
+				result.url = getUrl(results[i]);
 			}
 			
 			//Get Content
@@ -91,12 +116,15 @@ if(results.length > 0) {
 				result.content = "";
 			}
 			
-			result.url = getURL(results[i]);
-			
 			//Get individual words and store them in an object
 			if(includeTitleInList) {
 				processString(result.title);
 			}
+			
+			if(includeUrlInList) {
+				processString(result.url);
+			}
+			
 			processString(result.content);
 			
 			//Store result object
@@ -123,6 +151,17 @@ if(results.length > 0) {
 			}
 		}
 		
+		//If include url option is enabled go through the url terms and increment the frequency of each word
+		if(includeUrlInList) {
+			var urlArr = resultObjects[i].url.split(" ");
+				
+			for(var j = 0; j < urlArr.length; j++ ) {
+				if(urlArr[j] != ""){
+					wordsVector[urlArr[j]]++;
+				}
+			}
+		}
+		
 		//Go through each content words and increment the frequency of each word
 		var contentArr = resultObjects[i].content.split(" ");
 
@@ -137,9 +176,9 @@ if(results.length > 0) {
 	}
 	
 	// Automatically cluster results using SOM and display clusters in the Google Results page
-	//var clusters = clusterResultsUsingSOM(resultObjects);
-	//console.log("Clusters: ", clusters);
-	//clusterGoogleResults(clusters);
+	var clusters = clusterResultsUsingSOM(resultObjects);
+	console.log("Clusters: ", clusters);
+	clusterGoogleResults(clusters);
 	
 	/* for(var i = 0; i < resultObjects.length; i++ ) {
 		console.log("Vector Length: " + Object.keys(resultObjects[i].data).length);
@@ -184,6 +223,12 @@ function processString(toProcess) {
 function removeStopWordsStemm(toProcess) {
 	//Get the query terms
 	var queryTerms = getQuery().split(" ");
+	//Stem query terms
+	for (var i = 0; i < queryTerms.length; i++) {
+		if(wordStemming) {
+			queryTerms[i] = stemmer(queryTerms[i]);
+		}
+	};
 	//Split the string into individual words
 	var words = toProcess.split(" ");
 	
@@ -205,7 +250,7 @@ function removeStopWordsStemm(toProcess) {
 			}
 		}
 		//If it is not a stop word concat it with the result
-		if(stopwords.indexOf(words[i]) < 0) {
+		if(stopwords.indexOf(words[i]) < 0 && urlStopwords.indexOf(words[i]) < 0) {
 			result += words[i]+" ";
 		}
 	}

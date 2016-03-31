@@ -334,24 +334,24 @@ var clusterResultsUsingSOM = function(results) {
 	// Create and initialise SOM
 	var som = create({
 		features: wordList, 
-		initialLearningRate: 0.8,
+		initialLearningRate: 0.9,
 		iterationCount: 1000, 
-		width: 5, 
-		height: 5
+		width: 10, 
+		height: 10
 	});
 	
 	som.init({});
 	
 	// Train network with results as stimuli
-	/* while(results.length > 0) {
+	while(results.length > 0) {
 		var i = Math.floor(Math.random()*results.length);
 		som.train(results[i].id, results[i].data);
 		results.splice(i, 1);
-	}; */
+	};
 	
-	results.forEach(function(result) {
+	/* results.forEach(function(result) {
 		som.train(result.id, result.data);
-	});
+	}); */
 
 	// Create and return clusters of documents from the organised map
 	var clusters = Array();
