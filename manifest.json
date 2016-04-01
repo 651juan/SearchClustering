@@ -21,9 +21,14 @@
 	},
 
 	"background": {
-		"scripts": ["background.js"],
+		"scripts": ["scripts/background.js"],
 		"persistent": false
 	},
+	
+	"content_scripts": [{
+		"matches": ["*://*/*"],
+		"js": ["scripts/utils.js", "scripts/textanalysis/porterStemmer.js", "scripts/som/som.js", "scripts/main.js"]
+	}],
 
 	"permissions" : [
 		"tabs",

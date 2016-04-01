@@ -318,6 +318,7 @@ var create = function (_config)
 var extractClusterFeatures = function(cluster) {
 	var featureList = {};
 	
+	// Fill feature list with words found in the documents of the cluster
 	cluster.documents.forEach(function(doc) {
 		for (var word in doc.data) {
 			if (doc.data[word] > 0) {
@@ -331,6 +332,7 @@ var extractClusterFeatures = function(cluster) {
 		};
 	});
 	
+	// Remove feature if it only appears in one document
 	for (var word in featureList) {
 		if (featureList[word] == 1) {
 			delete featureList[word];
@@ -342,7 +344,6 @@ var extractClusterFeatures = function(cluster) {
 
 // Cluster results using SOM
 var clusterResultsUsingSOM = function(results) {
-	console.log("Training SOM");
 	var originalResults = results.slice(0, results.length);
 	// console.log("Input: ", originalResults);
 	
@@ -360,8 +361,8 @@ var clusterResultsUsingSOM = function(results) {
 		features: wordList, 
 		initialLearningRate: 1,
 		iterationCount: results.length, 
-		width: 10, 
-		height: 10
+		width: 4, 
+		height: 4
 	});
 	
 	som.init({});

@@ -1,15 +1,13 @@
-//Google URL
-var googleURL =  new RegExp("^(https?:\/\/)?(www.)?(google).*");
-
-//URL parameters to get 100 results and turns auto complete off
-var pCheckForParameters = true;
-var pNumOfResults = "num=100";
-var pAutoCompleteOff = "complete=0";
-
-var validURL = false;
-
 //called when tab is changed
 function checkForValidUrl(tabId, changeInfo, tab) {
+	// Google URL
+	var googleURL = new RegExp("^(https?:\/\/)?(www.)?(google).*");
+	
+	//URL parameters to get 100 results and turns auto complete off
+	var pCheckForParameters = true;
+	var pNumOfResults = "num=100";
+	var pAutoCompleteOff = "complete=0";
+	
 	//if url has google in it show extension icon
 	if(googleURL.test(tab.url)) {
 		//Show the extension
@@ -55,23 +53,20 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 			}
 		}
 	}
+	
+	return validURL;
 };
 
-function injectScripts() {
+function performClusteringInBackground(config) {
 	if(validURL) {
-		console.log("Background.js: Running MainScript");
-		chrome.tabs.executeScript(null, {file: "porterStemmer.js"});
-		chrome.tabs.executeScript(null, {file: "som/som.js"});
-		chrome.tabs.executeScript(null, {file: "mainScript.js"});
+		chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+			chrome.tabs.sendMessage(tabs[0].id, {config: config}, function(response) {});
+		});
 	}
 };
 
-chrome.extension.onConnect.addListener(function(port) {
-	port.onMessage.addListener(function(config) {
-		console.log(config);
-		injectScripts();
-	});
-});
+//Must be global as it is set and used by functions fired through events
+var validURL = false;
 
 //Listen for tab changes
 chrome.tabs.onUpdated.addListener(checkForValidUrl);
