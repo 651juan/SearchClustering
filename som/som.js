@@ -277,7 +277,7 @@ Som.prototype.init = function(_config)
 		{
 			var featureIndex = _features[feature];
 			vector[featureIndex] = Math.round(Math.random() * precision)/precision * scale;
-			//vector[featureIndex] = 0;
+			//vector[featureIndex] = 0.5;
 		}
 		
 		return new Node({weights: vector});
@@ -314,7 +314,31 @@ var create = function (_config)
 	return new Som(_config);
 };
 
-
+// Added Functions 
+var extractClusterFeatures = function(cluster) {
+	var featureList = {};
+	
+	cluster.documents.forEach(function(doc) {
+		for (var word in doc.data) {
+			if (doc.data[word] > 0) {
+				if (featureList[word]) {
+					//featureList[word] += doc.data[word];
+					featureList[word]++;
+				} else {
+					featureList[word] = 1;
+				}
+			}
+		};
+	});
+	
+	for (var word in featureList) {
+		if (featureList[word] == 1) {
+			delete featureList[word];
+		}
+	}
+	
+	return featureList;
+};
 
 // Cluster results using SOM
 var clusterResultsUsingSOM = function(results) {
@@ -334,8 +358,8 @@ var clusterResultsUsingSOM = function(results) {
 	// Create and initialise SOM
 	var som = create({
 		features: wordList, 
-		initialLearningRate: 0.9,
-		iterationCount: 1000, 
+		initialLearningRate: 1,
+		iterationCount: results.length, 
 		width: 10, 
 		height: 10
 	});

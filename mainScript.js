@@ -10,7 +10,7 @@ var urlStopwords = ["http", "https", "www", "com", "co", "org", "net", "html", "
 	OPTIONS
 ************/
 var includeTitleInList = true;
-var includeUrlInList = true;
+var includeUrlInList = false;
 var removeQueryTerms = true;
 var stopWordsRemoval = true;
 var wordStemming = true;
@@ -91,7 +91,7 @@ if(results.length > 0) {
 				result.url = tmpUrl;
 			}else{
 				//If title is not included in list just get the title as it is
-				result.url = getUrl(results[i]);
+				result.url = getURL(results[i]);
 			}
 			
 			//Get Content
@@ -296,6 +296,7 @@ function clusterGoogleResults(clusters) {
 	
 	for (var i = 0; i < clusters.length; i++) {
 		resultsDiv.appendChild(getClusterHtml(i, clusters[i]));
+		console.log(extractClusterFeatures(clusters[i]));
 	};
 };
 

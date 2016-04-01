@@ -57,7 +57,7 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 	}
 };
 
-function injectScript() {
+function injectScripts() {
 	if(validURL) {
 		console.log("Background.js: Running MainScript");
 		chrome.tabs.executeScript(null, {file: "porterStemmer.js"});
@@ -66,6 +66,12 @@ function injectScript() {
 	}
 };
 
+chrome.extension.onConnect.addListener(function(port) {
+	port.onMessage.addListener(function(config) {
+		console.log(config);
+		injectScripts();
+	});
+});
+
 //Listen for tab changes
 chrome.tabs.onUpdated.addListener(checkForValidUrl);
-chrome.webNavigation.onCompleted.addListener(injectScript);

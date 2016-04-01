@@ -1,29 +1,39 @@
 <html>
 	<head>		
-		<link href="bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet"/>
-		<script src="bootstrap/js/boostrap.min.js" type="text/javascript"></script>
-		
 		<link href="css/style.css" type="text/css" rel="stylesheet" />
 	</head>
 		
 	<body>		
-		<div id="algorithm-select">
-			<form class="form-inline" onsubmit="return false">
-				<div class="form-group">
-					<select id="algorithm-choice" class="form-control">
-						<option value="km">K-Means</option>
-						<option value="nkm">No-K-Means</option>
-						<option value="gmm">Gaussian Mixture Models</option>
-						<option value="som">Self-Organising Maps</option>
-					</select>
-					<input type="submit" id="cluster-btn" class="form-control" value="Cluster Results" />
-				</div>
-			</form>
+		<div id="algorithmSelect">
+			<div>
+				<select id="algorithmChoice">
+					<option value="km">K-Means</option>
+					<option value="nkm">No-K-Means</option>
+					<option value="gmm">Gaussian Mixture Models</option>
+					<option value="som">Self-Organising Maps</option>
+				</select> 
+				<br/>
+				<br/>
+				<input type="checkbox" id="includeTitle" value="includeTitle"> <label for="includeTitle">Include Title</label> 
+				<br/>
+				<input type="checkbox" id="includeURL" value="includeURL"> <label for="includeURL">Include Title</label> 
+				<br/>
+				<input type="checkbox" id="removeQueryTerms" value="removeQueryTerms"> <label for="removeQueryTerms">Remove Query Terms</label> 
+				<br/>
+				<input type="checkbox" id="stopWordsRemoval" value="stopWordsRemoval"> <label for="stopWordsRemoval">Remove Stop Words</label> 
+				<br/>
+				<input type="checkbox" id="wordStemming" value="wordStemming"> <label for="wordStemming">Stem Words</label> 
+				<br/>
+				<input type="checkbox" id="removeSymbols" value="removeSymbols"> <label for="removeSymbols">Remove Symbols</label> 
+				<br/>
+				<input type="checkbox" id="removeNumbers" value="removeNumbers"> <label for="removeNumbers">Remove Numbers</label> 
+				<br/>
+				<br/>
+				<button id="clusterBtn">Cluster Results</button>
+			</div>
 		</div>
 		
-		<div id="output">
-			
-		</div>
-		
+		<script src="popup.js" type="text/javascript">
+		</script>
 	</body>
 </html>
