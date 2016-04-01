@@ -11,7 +11,6 @@ function performClustering(clusteringConfig) {
 	
 	if (results.length > 0) {
 		var clusters = getClusters(results, clusteringConfig);
-		
 		clusterGoogleResults(clusters);
 	}
 	console.log("You've reached Magic level 98. 3.14159265358979323846 xp to next level.");
@@ -22,6 +21,7 @@ function getClusters(results, config) {
 	// Automatically cluster results using SOM and display clusters in the Google Results page
 	switch (config.method) {
 		case "km": 
+			return clusterResultsUsingKMeans(results,config.noOfClusters); 
 		case "nkm":
 		case "gmm":
 		case "som":

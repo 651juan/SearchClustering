@@ -9,7 +9,8 @@ function sendMessage() {
 		removeStopWords: document.getElementById('removeStopWords').checked,
 		removeSymbols: document.getElementById('removeSymbols').checked,
 		removeNumbers: document.getElementById('removeNumbers').checked,
-		stemWords: document.getElementById('stemWords').checked
+		stemWords: document.getElementById('stemWords').checked,
+		noOfClusters: document.getElementById('noOfClusters').value
 	};
 	
 	chrome.extension.getBackgroundPage().performClusteringInBackground(config);
