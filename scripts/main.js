@@ -11,7 +11,7 @@ function performClustering(clusteringConfig) {
 	
 	if (results.length > 0) {
 		var clusters = getClusters(results, clusteringConfig);
-		clusterGoogleResults(clusters);
+		clusterGoogleResults(clusters, clusteringConfig);
 	}
 	
 	console.log("Results clustered.");
@@ -296,26 +296,38 @@ function setContent(newContent, result) {
 }
 
 //Clears the Google results section and fills it with clustered results
-function clusterGoogleResults(clusters) {
+function clusterGoogleResults(clusters, config) {
+	//Returns the HTML code for a cluster
+	function getClusterHtml(cluster) {
+		var clusterNode = document.createElement("div");
+		cluster.documents.forEach(function(doc) {
+			var documentNode = doc.html;
+			clusterNode.appendChild(documentNode);
+		});
+		
+		if (showFeatures) {
+			var clusterFeatures = extractClusterFeatures(cluster);
+			var featuresDiv = document.createElement("div");
+			for (var feature in clusterFeatures) {
+				var featureNode = document.createElement("p");
+				featureNode.style.cssText = "display:inline-block;padding-right:20px;font-size:12px;";
+				featureNode.innerHTML = feature + ": " + clusterFeatures[feature];
+				featuresDiv.appendChild(featureNode);
+			};
+			clusterNode.appendChild(featuresDiv);
+		}
+		
+		var clusterBreak = document.createElement("hr");
+		clusterNode.appendChild(clusterBreak);
+			
+		return clusterNode;
+	};
+	
+	var showFeatures = config.showFeatures;
 	var resultsDiv = document.getElementsByClassName("srg")[0];
 	resultsDiv.innerHTML = "";
 	
 	for (var i = 0; i < clusters.length; i++) {
-		resultsDiv.appendChild(getClusterHtml(i, clusters[i]));
+		resultsDiv.appendChild(getClusterHtml(clusters[i]));
 	};
-};
-
-//Returns the HTML code for the cluster
-function getClusterHtml(id, cluster) {
-	var clusterNode = document.createElement("div");
-	
-	cluster.documents.forEach(function(doc) {
-		var documentNode = doc.html;
-		clusterNode.appendChild(documentNode);
-	});
-	
-	var clusterBreak = document.createElement("hr");
-	clusterNode.appendChild(clusterBreak);
-		
-	return clusterNode;
 };

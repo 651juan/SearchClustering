@@ -8,6 +8,7 @@ function sendMessage() {
 		removeSymbols: document.getElementById('removeSymbols').checked,
 		removeNumbers: document.getElementById('removeNumbers').checked,
 		stemWords: document.getElementById('stemWords').checked,
+		showFeatures: document.getElementById('showFeatures').checked,
 		km: {
 			noOfClusters: document.getElementById('noOfClusters').value
 		},
