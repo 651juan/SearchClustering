@@ -5,7 +5,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 //Performs clustering of the results on the Google page according to the configuration provided
 function performClustering(clusteringConfig) {
-	console.log("Performing Magic...");
+	console.log("Clustering results using ", clusteringConfig.method);
 	
 	var results = getSearchResults(clusteringConfig);
 	
@@ -13,7 +13,8 @@ function performClustering(clusteringConfig) {
 		var clusters = getClusters(results, clusteringConfig);
 		clusterGoogleResults(clusters);
 	}
-	console.log("You've reached Magic level 98. 3.14159265358979323846 xp to next level.");
+	
+	console.log("Results clustered.");
 };
 
 //Clusters the results using the method specified in the configuration and returns a list of clusters (each with a list of documents and their HTML)
@@ -21,13 +22,11 @@ function getClusters(results, config) {
 	// Automatically cluster results using SOM and display clusters in the Google Results page
 	switch (config.method) {
 		case "km": 
-			return clusterResultsUsingKMeans(results,config.noOfClusters); 
+			return clusterResultsUsingKMeans(results, config.km.noOfClusters); 
 		case "nkm":
 		case "gmm":
 		case "som":
-			return clusterResultsUsingSOM(results);
-		default:
-			return clusterResultsUsingSOM(results);
+			return clusterResultsUsingSOM(results, config.som);
 	}
 };
 

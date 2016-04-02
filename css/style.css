@@ -2,3 +2,11 @@ body {
 	width: 600px;
 	height: 400px;
 }
+
+.hide {
+	display: none;
+}
+
+.show {
+	display: default;
+}

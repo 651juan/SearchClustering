@@ -343,7 +343,7 @@ var extractClusterFeatures = function(cluster) {
 };
 
 // Cluster results using SOM
-var clusterResultsUsingSOM = function(results) {
+var clusterResultsUsingSOM = function(results, config) {
 	var originalResults = results.slice(0, results.length);
 	// console.log("Input: ", originalResults);
 	
@@ -359,10 +359,10 @@ var clusterResultsUsingSOM = function(results) {
 	// Create and initialise SOM
 	var som = create({
 		features: wordList, 
-		initialLearningRate: 1,
-		iterationCount: results.length, 
-		width: 4, 
-		height: 4
+		initialLearningRate: config.networkLearningRate,
+		iterationCount: results.length > config.networkIterations ? results.length : config.networkIterations, 
+		width: config.networkWidth, 
+		height: config.networkHeight
 	});
 	
 	som.init({});
