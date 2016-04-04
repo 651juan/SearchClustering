@@ -39,6 +39,7 @@ function getSearchResults(config) {
 	var removeSymbols = config.removeSymbols;
 	var removeNumbers = config.removeNumbers;
 	var stemWords = config.stemWords;
+	var removeShortWords = config.removeShortWords;
 
 	//Splits string by " " and stores it in an object
 	var processString = function(toProcess) {
@@ -100,7 +101,13 @@ function getSearchResults(config) {
 			}
 			//If it is not a stop word concat it with the result
 			if(stopwords.indexOf(words[i]) < 0 && urlStopwords.indexOf(words[i]) < 0) {
-				result += words[i]+" ";
+				if(removeShortWords) {
+					if(words[i].length >= 3) {
+						result += words[i]+" ";
+					}
+				}else{
+					result += words[i]+" ";
+				}
 			}
 		}
 		
@@ -114,7 +121,9 @@ function getSearchResults(config) {
 	// Remove results which have more than one class (i.e. videos, cards, etc.)
 	for(var i = allresults.length - 1; i >= 0; i--) {
 		if(allresults[i].className == 'g') {
-			results.push(allresults[i]);
+			if(allresults[i].id != "imagebox_bigimages") {
+				results.push(allresults[i]);
+			}
 		}
 	}
 
@@ -139,7 +148,7 @@ function getSearchResults(config) {
 				
 				//Remove symbols
 				if(removeSymbols){
-					tmpTitle = tmpTitle.replace(/[-!$%^&*()_×+|·–~—=`{}\[\]:";'<>“”?•▾,.\/]/g, "");
+					tmpTitle = tmpTitle.replace(/[^a-zA-Z0-9\s]/g, "");
 				}
 				//Remove Numbers
 				if(removeNumbers) {
@@ -163,7 +172,7 @@ function getSearchResults(config) {
 				
 				//Remove symbols
 				if(removeSymbols){
-					tmpUrl = tmpUrl.replace(/[-!$%^&*()_×+|·–~—=`{}\[\]:";'<>“”?•▾,.\/]/g, " ");
+					tmpUrl = tmpUrl.replace(/[^a-zA-Z0-9\s]/g, " ");
 				}
 				//Remove Numbers
 				if(removeNumbers) {
@@ -186,7 +195,7 @@ function getSearchResults(config) {
 				var tmpContent = getContent(results[i]).toLowerCase();
 				//Remove symbols
 				if(removeSymbols){
-					tmpContent = tmpContent.replace(/[-!$%^&*()_×+|·–~—=`{}\[\]:";'<>“”?•▾,.\/]/g, "");
+					tmpContent = tmpContent.replace(/[^a-zA-Z0-9\s]/g, "");
 				}
 				//Remove Numbers
 				if(removeNumbers) {
@@ -217,6 +226,7 @@ function getSearchResults(config) {
 		}catch(err) {
 			//result image/video/news
 			console.log(err);
+			console.log(results[i]);
 		}
 	}
 	
