@@ -25,6 +25,7 @@ function getClusters(results, config) {
 			return clusterResultsUsingKMeans(results, config.km.noOfClusters); 
 		case "nkm":
 		case "gmm":
+			return clusterResultsUsingGMM(results, config.gmm);
 		case "som":
 			return clusterResultsUsingSOM(results, config.som);
 	}
