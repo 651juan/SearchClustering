@@ -7,6 +7,7 @@ function sendMessage() {
 		removeStopWords: document.getElementById('removeStopWords').checked,
 		removeSymbols: document.getElementById('removeSymbols').checked,
 		removeNumbers: document.getElementById('removeNumbers').checked,
+		removeShortWords: document.getElementById('removeShortWords').checked,
 		stemWords: document.getElementById('stemWords').checked,
 		showFeatures: document.getElementById('showFeatures').checked,
 		km: {
