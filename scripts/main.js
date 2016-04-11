@@ -42,6 +42,7 @@ function getSearchResults(config) {
 	var removeNumbers = config.removeNumbers;
 	var stemWords = config.stemWords;
 	var removeShortWords = config.removeShortWords;
+	var removeSingleDocumentTerms = config.removeSingleDocumentTerms;
 
 	//Splits string by " " and stores it in an object
 	var processString = function(toProcess) {
@@ -244,6 +245,8 @@ function getSearchResults(config) {
 		}
 	}
 	
+	var wordsHistogram = JSON.parse(JSON.stringify(wordsBlankVector));
+	
 	//Go through all the results again
 	for(var i = 0; i < resultObjects.length; i++ ) {
 		//Create an object using the list of words created earlier
@@ -283,6 +286,34 @@ function getSearchResults(config) {
 		//Add the vector to the result object
 		resultObjects[i].data = wordsVector;
 	}
+	
+	// Remove words which occur in only one document
+	// Construct histogram
+	if (removeSingleDocumentTerms) {
+		for (var i = 0; i < resultObjects.length; i++ ) {
+			for (var word in resultObjects[i].data) {
+				if(resultObjects[i].data[word] > 0){
+					wordsHistogram[word]++;
+				};
+			};		
+		};
+		
+		// Remove from histogram those words which appear in only one document
+		for (var word in wordsHistogram) {
+			if (wordsHistogram[word] == 1) {
+				delete wordsHistogram[word];
+			};
+		};
+		
+		// Remove words not found in the histogram from the result
+		for (var i = 0; i < resultObjects.length; i++) {
+			for (var word in resultObjects[i].data) {
+				if(!wordsHistogram[word]) {
+					delete resultObjects[i].data[word];
+				};
+			};		
+		};
+	};
 	
 	return resultObjects;
 };

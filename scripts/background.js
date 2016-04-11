@@ -5,7 +5,7 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 	
 	//URL parameters to get 100 results and turns auto complete off
 	var pCheckForParameters = true;
-	var pNumOfResults = "num=100";
+	var pNumOfResults = "num=64";
 	var pAutoCompleteOff = "complete=0";
 	
 	//if url has google in it show extension icon

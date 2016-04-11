@@ -9,6 +9,7 @@ function sendMessage() {
 		removeSymbols: document.getElementById('removeSymbols').checked,
 		removeNumbers: document.getElementById('removeNumbers').checked,
 		removeShortWords: document.getElementById('removeShortWords').checked,
+		removeSingleDocumentTerms: document.getElementById('removeSingleDocumentTerms').checked,
 		stemWords: document.getElementById('stemWords').checked,
 		showFeatures: document.getElementById('showFeatures').checked,
 		km: {

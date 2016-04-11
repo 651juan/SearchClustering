@@ -43,8 +43,6 @@ var Som = function(_config)
 	this.iterationCount = config.iterationCount;
 	this.initialLearningRate = config.initialLearningRate || 0.1;
 	this.initialRange = config.initialRange || 1;
-	
-	console.log(this.initialRange);
 
 	this.features = {};
 
@@ -281,7 +279,6 @@ Som.prototype.init = function(_config)
 		{
 			var featureIndex = _features[feature];
 			vector[featureIndex] = (Math.round(Math.random() * precision)/precision) * scale * range;
-			//vector[featureIndex] = 0.5;
 		}
 		
 		return new Node({weights: vector});
@@ -390,12 +387,14 @@ var clusterResultsUsingSOM = function(results, config) {
 		var i = Math.floor(Math.random()*results.length);
 		som.train(results[i].id, results[i].data);
 		results.splice(i, 1);
-	};
+	}; 
 	
-	/* results.forEach(function(result) {
+	/*
+	results.forEach(function(result) {
 		som.train(result.id, result.data);
-	}); */
-
+	});
+	*/
+		
 	// Create and return clusters of documents from the organised map
 	var clusters = Array();
 	for (var i = 0; i < som.width * som.height; i++) {
