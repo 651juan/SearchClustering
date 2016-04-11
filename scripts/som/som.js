@@ -42,6 +42,9 @@ var Som = function(_config)
 	this.initialRadius = config.initialRadius || max(this.width, this.height)/2;
 	this.iterationCount = config.iterationCount;
 	this.initialLearningRate = config.initialLearningRate || 0.1;
+	this.initialRange = config.initialRange || 1;
+	
+	console.log(this.initialRange);
 
 	this.features = {};
 
@@ -260,6 +263,7 @@ Som.prototype.init = function(_config)
 {
 	var config = _config||{};
 	var somSize = this.width * this.height;
+	var range = this.initialRange;
 
 	var randomize = function(_features, _somSize, _scale, _precision)
 	{
@@ -276,7 +280,7 @@ Som.prototype.init = function(_config)
 		for (feature in _features)
 		{
 			var featureIndex = _features[feature];
-			vector[featureIndex] = Math.round(Math.random() * precision)/precision * scale;
+			vector[featureIndex] = (Math.round(Math.random() * precision)/precision) * scale * range;
 			//vector[featureIndex] = 0.5;
 		}
 		
@@ -342,6 +346,19 @@ var extractClusterFeatures = function(cluster) {
 	return featureList;
 };
 
+// Get Max Occurrence
+var getMaxOccurrence = function(results) {
+	var max = 0;
+	for (result in results) {
+		for (word in results[result].data) {
+			if (results[result].data[word] > max) {
+				max = results[result].data[word];
+			}
+		};
+	};
+	return max;
+};
+
 // Cluster results using SOM
 var clusterResultsUsingSOM = function(results, config) {
 	var originalResults = results.slice(0, results.length);
@@ -360,6 +377,7 @@ var clusterResultsUsingSOM = function(results, config) {
 	var som = create({
 		features: wordList, 
 		initialLearningRate: config.networkLearningRate,
+		initialRange: getMaxOccurrence(originalResults),
 		iterationCount: results.length > config.networkIterations ? results.length : config.networkIterations, 
 		width: config.networkWidth, 
 		height: config.networkHeight
