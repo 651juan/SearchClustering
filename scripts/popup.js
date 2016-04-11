@@ -1,6 +1,7 @@
 function sendMessage() {
 	var config = {
 		method: document.getElementById('algorithmChoice').value,
+		useTestData: document.getElementById('useTestData').checked,
 		includeTitle: document.getElementById('includeTitle').checked,
 		includeURL: document.getElementById('includeURL').checked,
 		removeQueryTerms: document.getElementById('removeQueryTerms').checked,

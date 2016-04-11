@@ -33,6 +33,7 @@ function getClusters(results, config) {
 
 //Returns a list of search results including Title, URL, Content, HTML, and Terms Vector
 function getSearchResults(config) {
+	var useTestData = config.useTestData;
 	var includeTitleInList = config.includeTitle;
 	var includeURLInList = config.includeURL;
 	var removeQueryTerms = config.removeQueryTerms;
@@ -116,9 +117,21 @@ function getSearchResults(config) {
 	}
 
 	//Get results
-	var allresults = document.getElementsByClassName("g");
+	var allresults;
+	
+	if(useTestData) {
+		//Get the results from the xml
+		var query = getQuery();
+		console.log("Use test data checked");
+		console.log("Getting test data for: " + query);
+		
+		allresults = getTestDataResults(query);
+	}else{
+		 allresults = document.getElementsByClassName("g");
+		 console.log(allresults[2]);
+	}
+	
 	var results = Array();
-
 	// Remove results which have more than one class (i.e. videos, cards, etc.)
 	for(var i = allresults.length - 1; i >= 0; i--) {
 		if(allresults[i].className == 'g') {
