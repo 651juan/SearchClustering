@@ -35,7 +35,7 @@ function getTestDataResults(filename){
 		//Title url
 		var titleURL = document.createElement("A");
 		titleURL.text = dTitle;
-		titleURL.target = dURL;
+		titleURL.href = dURL;
 		
 		//Content div
 		var contentDiv = document.createElement('div');
