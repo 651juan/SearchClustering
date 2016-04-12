@@ -78,11 +78,12 @@ function getSearchResults(config) {
 		//Get the query terms
 		var queryTerms = getQuery().split(" ");
 		//Stem query terms
-		for (var i = 0; i < queryTerms.length; i++) {
-			if(stemWords) {
-				queryTerms[i] = stemmer(queryTerms[i]);
-			}
-		};
+		if(stemWords) {
+			for (var i = 0; i < queryTerms.length; i++) {
+					queryTerms[i] = stemmer(queryTerms[i]);
+			};
+		}
+		
 		//Split the string into individual words
 		var words = toProcess.split(" ");
 		
@@ -103,8 +104,19 @@ function getSearchResults(config) {
 					continue;
 				}
 			}
-			//If it is not a stop word concat it with the result
-			if(stopwords.indexOf(words[i]) < 0 && urlStopwords.indexOf(words[i]) < 0) {
+			
+			if(removeStopWords) {
+				//If it is not a stop word concat it with the result
+				if(stopwords.indexOf(words[i]) < 0 && urlStopwords.indexOf(words[i]) < 0) {
+					if(removeShortWords) {
+						if(words[i].length >= 3) {
+							result += words[i]+" ";
+						}
+					}else{
+						result += words[i]+" ";
+					}
+				}
+			}else {
 				if(removeShortWords) {
 					if(words[i].length >= 3) {
 						result += words[i]+" ";
@@ -191,7 +203,7 @@ function getSearchResults(config) {
 				result.wordReference = getWordReference(result.originalReference, tmpTitle);
 				
 				//Remove stop words and stemm title
-				if(removeStopWords) {
+				if(removeStopWords || stemWords) {
 					tmpTitle = removeStopWordsStemm(tmpTitle);
 				}
 				result.title = tmpTitle;
@@ -218,7 +230,7 @@ function getSearchResults(config) {
 				result.wordReference = getWordReference(result.originalReference, tmpUrl);
 				
 				//Remove stop words and stemm title
-				if(removeStopWords) {
+				if(removeStopWords || stemWords) {
 					tmpUrl = removeStopWordsStemm(tmpUrl);
 				}
 				result.url = tmpUrl;
@@ -244,7 +256,7 @@ function getSearchResults(config) {
 				result.wordReference = getWordReference(result.originalReference, tmpContent);
 				
 				//Remove stopWords and stemm content
-				if(removeStopWords) {
+				if(removeStopWords || stemWords) {
 					tmpContent = removeStopWordsStemm(tmpContent);
 				}
 				result.content = tmpContent;
