@@ -1,14 +1,16 @@
 function clusterResultsUsingNoKMeans(results, threshold)
 {
-	console.log(threshold);
-    clusters = [];
+	//console.log(threshold);
+    var clusters = [];
+    var distances = [];
+    var min_index = 0;
     for (var i = 0; i < results.length; i++)
     {
     	distances = []
-    	var min_index = 0;
+    	min_index = 0;
     	if (clusters.length == 0)
     	{
-    		clusters.push(new_cluster([results[i]], clusters.length, results[i].data));
+    		clusters.push(new_cluster([results[i]], clusters.length, clone_object(results[i].data)));
     	}
     	else
     	{
@@ -24,7 +26,7 @@ function clusterResultsUsingNoKMeans(results, threshold)
     		}
     		else
     		{
-    			clusters.push(new_cluster([results[i]], clusters.length, results[i].data));
+    			clusters.push(new_cluster([results[i]], clusters.length, clone_object(results[i].data)));
     		}
     	}
     }
@@ -57,7 +59,7 @@ function calc_cosine_distance(frequency_list1, frequency_list2)
 
 function new_cluster(document_list, cluster_id, word_list)
 {
-	cluster = {
+	var cluster = {
 		documents:document_list,
 		id:cluster_id,
 		data:word_list
@@ -67,8 +69,8 @@ function new_cluster(document_list, cluster_id, word_list)
 
 function minimum_distance_index(distances)
 {
-	minimum = distances[0];
-	minimum_index = 0;
+	var minimum = distances[0];
+	var minimum_index = 0;
 	for (var j = 0; j < distances.length; j++)
 	{
 		if (distances[j] < minimum)
@@ -86,4 +88,14 @@ function update(cluster, document)
 	{
 		cluster.data[frequency] = (cluster.data[frequency] + document.data[frequency])/2;
 	}
+}
+
+function clone_object(obj) {
+    var temp = {};
+    
+    for (var frequency in obj)
+    {
+    	temp[frequency] = obj[frequency];
+    }
+    return temp;
 }
