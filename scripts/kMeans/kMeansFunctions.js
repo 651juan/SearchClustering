@@ -49,5 +49,14 @@ function clusterObjects(resultObjects, vectorClusters) {
 }
 
 function clusterResultsUsingKMeans(resultObjects,k) {
-	return clusterObjects(resultObjects, clusterfck.kmeans(resultObjectsToVectors(resultObjects), k));
+	var clusters = clusterfck.kmeans(resultObjectsToVectors(resultObjects), k);
+	
+	var noOfClusters = clusters.filter(function(value) { return value !== undefined }).length;
+
+	while(noOfClusters != k) {
+		clusters = clusterfck.kmeans(resultObjectsToVectors(resultObjects), k);
+		noOfClusters = clusters.filter(function(value) { return value !== undefined }).length;
+	}
+	
+	return clusterObjects(resultObjects, clusters);
 }

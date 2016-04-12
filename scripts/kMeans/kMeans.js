@@ -504,14 +504,14 @@ require.define("/distance.js", function (require, module, exports, __dirname, __
    },
    manhattan: function(v1, v2) {
      var total = 0;
-     for (var i = 0; i < v1.length ; i++) {
+     for (var i = 1; i < v1.length ; i++) {
         total += Math.abs(v2[i] - v1[i]);      
      }
      return total;
    },
    max: function(v1, v2) {
      var max = 0;
-     for (var i = 0; i < v1.length; i++) {
+     for (var i = 1; i < v1.length; i++) {
         max = Math.max(max , Math.abs(v2[i] - v1[i]));      
      }
      return max;
@@ -545,6 +545,9 @@ function closestCentroid(point, centroids, distance) {
    return index;
 }
 
+//--->points - documents to cluster
+//--->k no of clusters
+//--->distance - string to chose distance calculataion 
 function kmeans(points, k, distance, snapshotPeriod, snapshotCb) {
    distance = distance || "euclidean";
    if (typeof distance == "string") {
@@ -553,11 +556,17 @@ function kmeans(points, k, distance, snapshotPeriod, snapshotCb) {
    
    //--->Get k random vectors from the given array of vectors
    var centroids = randomCentroids(points, k);
+   //--->Blank array no of documents to cluster
    var assignment = new Array(points.length);
+   //---> Create an array of K empty clusters
    var clusters = new Array(k);
 
+   //--->No of iterations
    var iterations = 0;   
+   //--->Checks if any documents moved
    var movement = true;
+   
+   //--->while the documents are moving
    while (movement) {
       // update point-to-centroid assignments
       for (var i = 0; i < points.length; i++) {
@@ -587,7 +596,7 @@ function kmeans(points, k, distance, snapshotPeriod, snapshotCb) {
             }
             newCentroid[g] = sum / assigned.length;
             
-            if (newCentroid[g] != centroid[g]) {3
+             if (newCentroid[g] != centroid[g]) {
                movement = true;
             }
          }
