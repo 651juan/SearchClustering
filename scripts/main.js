@@ -5,17 +5,37 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 //Performs clustering of the results on the Google page according to the configuration provided
 function performClustering(clusteringConfig) {
-	console.log("Clustering results using ", clusteringConfig.method);
-	
-	var results = getSearchResults(clusteringConfig);
-	
-	if (results.length > 0) {
-		var clusters = getClusters(results, clusteringConfig);
-		clusterGoogleResults(clusters, clusteringConfig);
-	}
-	
-	//console.log(clusters);
-	console.log("Results clustered.");
+	if (clusteringConfig.useTestData) {
+		var str = "subTopicID\tresultID\n";
+		console.log(str);
+		var iteration = 1;
+		testDataSubjects.forEach(function (subject) {
+			//console.log("Clustering results using ", clusteringConfig.method);
+			var fileName = subject+".n.xml";
+			var results = getSearchResults(clusteringConfig, fileName);
+			
+			if (results.length > 0) {
+				var clusters = getClusters(results, clusteringConfig);
+				clusterGoogleResults(clusters, clusteringConfig, iteration);
+			}
+			
+			//console.log(clusters);
+			//console.log("Results clustered.");
+			iteration++;
+		});
+	} else {
+		console.log("Clustering results using ", clusteringConfig.method);
+		
+		var results = getSearchResults(clusteringConfig, null);
+		
+		if (results.length > 0) {
+			var clusters = getClusters(results, clusteringConfig);
+			clusterGoogleResults(clusters, clusteringConfig, 0);
+		}
+		
+		//console.log(clusters);
+		console.log("Results clustered.");
+	};
 };
 
 //Clusters the results using the method specified in the configuration and returns a list of clusters (each with a list of documents and their HTML)
@@ -33,7 +53,7 @@ function getClusters(results, config) {
 };
 
 //Returns a list of search results including Title, URL, Content, HTML, and Terms Vector
-function getSearchResults(config) {
+function getSearchResults(config, fileName, iteration) {
 	var useTestData = config.useTestData;
 	var includeTitleInList = config.includeTitle;
 	var includeURLInList = config.includeURL;
@@ -44,6 +64,7 @@ function getSearchResults(config) {
 	var stemWords = config.stemWords;
 	var removeShortWords = config.removeShortWords;
 	var removeSingleDocumentTerms = config.removeSingleDocumentTerms;
+	var queryNumber = iteration;
 
 	//Splits string by " " and stores it in an object
 	var processString = function(toProcess) {
@@ -148,16 +169,17 @@ function getSearchResults(config) {
 	//Get results
 	var allresults;
 	
-	if(useTestData) {
+	if (useTestData) {
 		//Get the results from the xml
-		var query = getQuery();
-		console.log("Use test data checked");
-		console.log("Getting test data for: " + query);
+		//var query = getQuery();
+		var query = fileName;
+		//console.log("Use test data checked");
+		//console.log("Getting test data for: " + query);
 		
 		allresults = getTestDataResults(query);
-	}else{
-		 allresults = document.getElementsByClassName("g");
-		 //console.log(allresults[2]);
+	} else {
+		allresults = document.getElementsByClassName("g");
+		//console.log(allresults[2]);
 	}
 	
 	var results = Array();
@@ -390,7 +412,7 @@ function setContent(newContent, result) {
 }
 
 //Clears the Google results section and fills it with clustered results
-function clusterGoogleResults(clusters, config) {
+function clusterGoogleResults(clusters, config, queryNumber) {
 	//Returns the HTML code for a cluster
 	function getClusterHtml(cluster) {
 		var clusterNode = document.createElement("div");
@@ -417,6 +439,19 @@ function clusterGoogleResults(clusters, config) {
 		return clusterNode;
 	};
 	
+	function outputClustersInDatasetFormat(clusters) {
+		var set = queryNumber;
+		var str = "";
+		for (var i = 0; i < clusters.length; i++) {
+			clusters[i].documents.forEach(function(doc) {
+				var j = doc.id + 1;
+				var k = i + 1;
+				str += set+"."+k+"\t"+set+"."+j+"\n";
+			});
+		};
+		console.log(str);
+	};
+	
 	var showFeatures = config.showFeatures;
 	var resultsDiv = document.getElementsByClassName("srg")[0];
 	resultsDiv.innerHTML = "";
@@ -424,4 +459,6 @@ function clusterGoogleResults(clusters, config) {
 	for (var i = 0; i < clusters.length; i++) {
 		resultsDiv.appendChild(getClusterHtml(clusters[i]));
 	};
+	
+	outputClustersInDatasetFormat(clusters);
 };

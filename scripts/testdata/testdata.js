@@ -1,7 +1,7 @@
 function getTestDataResults(filename){
 	//Create the path to the xml file specified
 	var filePath = "scripts/testdata/xml/" + filename;
-	console.log("XML Path: " + filePath);
+	//console.log("XML Path: " + filePath);
 	
 	if (window.XMLHttpRequest) {
 		xhttp = new XMLHttpRequest();

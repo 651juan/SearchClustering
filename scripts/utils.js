@@ -3,6 +3,10 @@ var stopwords = ["a", "about", "above", "above", "across", "after", "afterwards"
 
 var urlStopwords = ["http", "https", "www", "com", "co", "org", "net", "html", "htm", "php", "aspx"];
 
+var testDataSubjects = ["polaroid", "kangaroo", "shakira", "kawasaki", "yellow", "strongman", "hud", "fandango", "dsl", "bausch", "pizza", "snake", "queen", "cerberus", "equinox", "marble", "apple", "veracruz", "virgo", "neptune", "judas", "boomerang", "hoover", "nickelodeon", "steam", "atom", "lakota", "ghost", "apartment", "chase", "mannequin", "pods", "aetna", "mustang", "eros", "noggin", "hedonism", "shockwave", "apache", "magic", "bald_eagle", "bermuda_triangle", "monte_carlo", "iron_man", "sherlock_holmes", "trojan_horse", "poison_ivy", "ten_commandments", "flight_93", "ice_age", "zero_hour", "full_moon", "fort_recovery", "soul_food", "mighty_mouse", "jurassic_park", "indiana_university", "heron_island", "match_point", "texas_rangers", "brett_butler", "courtney_cox", "jungle_fever", "blood_work", "harry_potter", "guild_wars", "john_carroll", "black_planet", "century_21", "coyote_ugly", "mortal_kombat", "silent_hill", "stone_cold", "independence_day", "lemonade_stand", "aurora_borealis", "agent_orange", "babel_fish", "far_cry", "carrot_top", "the_last_supper", "romeo_and_juliet", "medal_of_honor", "arch_of_triumph", "dead_or_alive", "man_in_black", "heaven_and_hell", "stand_by_me", "prince_of_persia", "billy_the_kid", "dog_eat_dog", "sense_and_sensibility", "soldier_of_fortune", "one_tree_hill", "sisters_of_mercy", "beauty_and_the_beast", "lord_of_the_flies", "battle_of_the_bulge", "the_da_vinci_code", "the_wizard_of_oz"];
+
+//var testDataSubjects = ["polaroid", "kangaroo"];
+
 // Get features which appear in more than one document of the cluster
 var extractClusterFeatures = function(cluster) {
 	var featureList = {};
