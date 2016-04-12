@@ -16,7 +16,7 @@ function sendMessage() {
 			noOfClusters: document.getElementById('noOfClusters').value
 		},
 		nkm: {
-			
+			threshold: document.getElementById('nkmThreshold').value
 		},
 		gmm: {
 			

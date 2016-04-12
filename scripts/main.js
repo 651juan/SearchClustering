@@ -33,7 +33,7 @@ function performClustering(clusteringConfig) {
 			clusterGoogleResults(clusters, clusteringConfig, 0);
 		}
 		
-		//console.log(clusters);
+		console.log(clusters);
 		console.log("Results clustered.");
 	};
 };
@@ -45,6 +45,7 @@ function getClusters(results, config) {
 		case "km": 
 			return clusterResultsUsingKMeans(results, config.km.noOfClusters); 
 		case "nkm":
+			return clusterResultsUsingNoKMeans(results, config.nkm.threshold);
 		case "gmm":
 			return clusterResultsUsingGMM(results, config.gmm);
 		case "som":
