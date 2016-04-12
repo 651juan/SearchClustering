@@ -13,9 +13,12 @@ var extractClusterFeatures = function(cluster) {
 			if (doc.data[word] > 0) {
 				if (featureList[word]) {
 					//featureList[word] += doc.data[word];
-					featureList[word]++;
+					featureList[word].count++;
 				} else {
-					featureList[word] = 1;
+					featureList[word] = {
+						count: 1,
+						word: doc.originalReference[word]
+					};
 				}
 			}
 		};
@@ -23,7 +26,7 @@ var extractClusterFeatures = function(cluster) {
 	
 	// Remove feature if it only appears in one document
 	for (var word in featureList) {
-		if (featureList[word] == 1) {
+		if (featureList[word].count == 1) {
 			delete featureList[word];
 		}
 	}

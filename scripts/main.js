@@ -14,6 +14,7 @@ function performClustering(clusteringConfig) {
 		clusterGoogleResults(clusters, clusteringConfig);
 	}
 	
+	//console.log(clusters);
 	console.log("Results clustered.");
 };
 
@@ -116,6 +117,21 @@ function getSearchResults(config) {
 		
 		return result;
 	}
+	
+	//Get reference for stemmed words to recover original words
+	var getWordReference = function(originalReference, str) {
+		var words = str.split(' ');
+		var result = originalReference;
+		
+		for (var word in words) {
+			var stemmed = stemmer(words[word]);
+			if (!result[stemmed]) {
+				result[stemmed] = words[word];
+			}
+		};
+		
+		return result;
+	};
 
 	//Get results
 	var allresults;
@@ -129,7 +145,7 @@ function getSearchResults(config) {
 		allresults = getTestDataResults(query);
 	}else{
 		 allresults = document.getElementsByClassName("g");
-		 console.log(allresults[2]);
+		 //console.log(allresults[2]);
 	}
 	
 	var results = Array();
@@ -141,6 +157,8 @@ function getSearchResults(config) {
 			}
 		}
 	}
+	
+	results.reverse();
 
 	//Array to store each result object
 	var resultObjects = Array(); //Title String (Original and Stemmed), Content String, URL String (Original and Stemmed), Data Object with words and frequencies, and HTML
@@ -152,7 +170,7 @@ function getSearchResults(config) {
 		//Create result Object
 		try{
 			//Create a new result object 
-			var result = {id: i, html: results[i]};
+			var result = {id: i, html: results[i], originalReference: {}};
 			
 			//Set the title, content and url
 			//Get Title
@@ -169,6 +187,9 @@ function getSearchResults(config) {
 				if(removeNumbers) {
 					tmpTitle = tmpTitle.replace(/[\d+]/g, "");
 				}
+				
+				result.wordReference = getWordReference(result.originalReference, tmpTitle);
+				
 				//Remove stop words and stemm title
 				if(removeStopWords) {
 					tmpTitle = removeStopWordsStemm(tmpTitle);
@@ -193,6 +214,9 @@ function getSearchResults(config) {
 				if(removeNumbers) {
 					tmpUrl = tmpUrl.replace(/[\d+]/g, "");
 				}
+				
+				result.wordReference = getWordReference(result.originalReference, tmpUrl);
+				
 				//Remove stop words and stemm title
 				if(removeStopWords) {
 					tmpUrl = removeStopWordsStemm(tmpUrl);
@@ -216,6 +240,9 @@ function getSearchResults(config) {
 				if(removeNumbers) {
 					tmpContent = tmpContent.replace(/[\d+]/g, "");
 				}
+				
+				result.wordReference = getWordReference(result.originalReference, tmpContent);
+				
 				//Remove stopWords and stemm content
 				if(removeStopWords) {
 					tmpContent = removeStopWordsStemm(tmpContent);
@@ -366,7 +393,7 @@ function clusterGoogleResults(clusters, config) {
 			for (var feature in clusterFeatures) {
 				var featureNode = document.createElement("p");
 				featureNode.style.cssText = "display:inline-block;padding-right:20px;font-size:12px;";
-				featureNode.innerHTML = feature + ": " + clusterFeatures[feature];
+				featureNode.innerHTML = clusterFeatures[feature].word + ": " + clusterFeatures[feature].count;
 				featuresDiv.appendChild(featureNode);
 			};
 			clusterNode.appendChild(featuresDiv);

@@ -315,34 +315,6 @@ var create = function (_config)
 	return new Som(_config);
 };
 
-// Added Functions 
-var extractClusterFeatures = function(cluster) {
-	var featureList = {};
-	
-	// Fill feature list with words found in the documents of the cluster
-	cluster.documents.forEach(function(doc) {
-		for (var word in doc.data) {
-			if (doc.data[word] > 0) {
-				if (featureList[word]) {
-					//featureList[word] += doc.data[word];
-					featureList[word]++;
-				} else {
-					featureList[word] = 1;
-				}
-			}
-		};
-	});
-	
-	// Remove feature if it only appears in one document
-	for (var word in featureList) {
-		if (featureList[word] == 1) {
-			delete featureList[word];
-		}
-	}
-	
-	return featureList;
-};
-
 // Get Max Occurrence
 var getMaxOccurrence = function(results) {
 	var max = 0;
