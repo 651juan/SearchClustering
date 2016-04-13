@@ -12,6 +12,7 @@ function sendMessage() {
 		removeSingleDocumentTerms: document.getElementById('removeSingleDocumentTerms').checked,
 		stemWords: document.getElementById('stemWords').checked,
 		showFeatures: document.getElementById('showFeatures').checked,
+		showResults: document.getElementById('showResults').checked,
 		km: {
 			noOfClusters: document.getElementById('noOfClusters').value
 		},

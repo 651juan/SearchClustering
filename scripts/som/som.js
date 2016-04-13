@@ -204,7 +204,7 @@ Som.prototype.train = function(_id, _vector)
 	var learningRate = determineLearningRate(currentIteration);
 
 	var bestMatchingNode = this.bestMatchingUnit(_vector);
-	bestMatchingNode.add(_id, _vector);
+	//bestMatchingNode.add(_id, _vector);
 	this.index(_id, bestMatchingNode);
 	
 	this.nodeList.forEach(function(_node)
@@ -310,6 +310,18 @@ Som.prototype.init = function(_config)
 	}
 };
 
+// Train All Instances
+Som.prototype.trainAll = function(results) {
+	for (var i = 0; i < this.iterationCount; i++) {
+		this.train(results[i % results.length].id, results[i % results.length].data);
+	};
+	
+	for (var doc in this.traineeIndex) {
+		var bestMatchingNode = this.bestMatchingUnit(results[doc].data);
+		bestMatchingNode.add(results[doc].id, results[doc].data);
+	};
+};
+
 var create = function (_config)
 {
 	return new Som(_config);
@@ -347,26 +359,15 @@ var clusterResultsUsingSOM = function(results, config) {
 		features: wordList, 
 		initialLearningRate: config.networkLearningRate,
 		initialRange: getMaxOccurrence(originalResults),
-		iterationCount: results.length > config.networkIterations ? results.length : config.networkIterations, 
+		iterationCount: config.networkIterations * results.length, 
 		width: config.networkWidth, 
 		height: config.networkHeight
 	});
 	
 	som.init({});
 	
-	// Train network with results as stimuli
-	while(results.length > 0) {
-		var i = Math.floor(Math.random()*results.length);
-		som.train(results[i].id, results[i].data);
-		results.splice(i, 1);
-	}; 
+	som.trainAll(results);
 	
-	/*
-	results.forEach(function(result) {
-		som.train(result.id, result.data);
-	});
-	*/
-		
 	// Create and return clusters of documents from the organised map
 	var clusters = Array();
 	for (var i = 0; i < som.width * som.height; i++) {

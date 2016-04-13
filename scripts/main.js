@@ -33,7 +33,7 @@ function performClustering(clusteringConfig) {
 			clusterGoogleResults(clusters, clusteringConfig, 0);
 		}
 		
-		console.log(clusters);
+		//console.log(clusters);
 		console.log("Results clustered.");
 	};
 };
@@ -158,9 +158,11 @@ function getSearchResults(config, fileName, iteration) {
 		var result = originalReference;
 		
 		for (var word in words) {
-			var stemmed = stemmer(words[word]);
-			if (!result[stemmed]) {
-				result[stemmed] = words[word];
+			if (!removeStopWords || stopwords.indexOf(words[word]) < 0) {
+				var stemmed = stemmer(words[word]);
+					if (!result[stemmed]) {
+						result[stemmed] = words[word];
+					}
 			}
 		};
 		
@@ -422,22 +424,53 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 			clusterNode.appendChild(documentNode);
 		});
 		
+		var clusterFeatures = extractClusterFeatures(cluster);
+		
 		if (showFeatures) {
-			var clusterFeatures = extractClusterFeatures(cluster);
 			var featuresDiv = document.createElement("div");
 			for (var feature in clusterFeatures) {
 				var featureNode = document.createElement("p");
 				featureNode.style.cssText = "display:inline-block;padding-right:20px;font-size:12px;";
-				featureNode.innerHTML = clusterFeatures[feature].word + ": " + clusterFeatures[feature].count;
+				featureNode.innerHTML = feature + " - " + clusterFeatures[feature].word + ": " + clusterFeatures[feature].count;
 				featuresDiv.appendChild(featureNode);
 			};
 			clusterNode.appendChild(featuresDiv);
 		}
+			
+		var moreLikeThisQuery = getMoreLikeThisQuery(clusterFeatures);
+		var originalQuery = encodeURIComponent(getQuery());
+		var moreLikeThis = document.createElement("a");
+		moreLikeThis.href = "#";
+		moreLikeThis.innerHTML = "Similar: " + moreLikeThisQuery;
+		moreLikeThis.href = location.href.replace("q="+originalQuery, "q="+encodeURIComponent(moreLikeThisQuery));
+		clusterNode.appendChild(moreLikeThis);
 		
 		var clusterBreak = document.createElement("hr");
 		clusterNode.appendChild(clusterBreak);
 			
 		return clusterNode;
+	};
+	
+	function getMoreLikeThisQuery(features) {
+			var getBestFeature = function () {
+				var bestFeature = {
+						word: '',
+						count: 1
+				};
+
+				for (var feature in features) {
+					if (features[feature].count > bestFeature.count) {
+						bestFeature = features[feature];
+					};
+				};
+
+				return bestFeature;
+			};
+
+			var addToQuery = getBestFeature().word;
+			var query = getQuery();
+		
+			return query + " " + addToQuery;
 	};
 	
 	function outputClustersInDatasetFormat(clusters) {
@@ -450,7 +483,9 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 				str += set+"."+k+"\t"+set+"."+j+"\n";
 			});
 		};
-		console.log(str);
+		if (config.showResults){
+			console.log(str)
+		};
 	};
 	
 	var showFeatures = config.showFeatures;

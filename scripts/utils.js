@@ -30,7 +30,7 @@ var extractClusterFeatures = function(cluster) {
 	
 	// Remove feature if it only appears in one document
 	for (var word in featureList) {
-		if (featureList[word].count == 1) {
+		if (featureList[word].count == 1 || !featureList[word].word) {
 			delete featureList[word];
 		}
 	}
