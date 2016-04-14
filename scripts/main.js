@@ -418,13 +418,23 @@ function setContent(newContent, result) {
 function clusterGoogleResults(clusters, config, queryNumber) {
 	//Returns the HTML code for a cluster
 	function getClusterHtml(cluster) {
+		
 		var clusterNode = document.createElement("div");
+		
+		var clusterFeatures = extractClusterFeatures(cluster);
+			
+		var moreLikeThisQuery = getMoreLikeThisQuery(clusterFeatures);
+		var originalQuery = encodeURIComponent(getQuery());
+		var moreLikeThis = document.createElement("a");
+		moreLikeThis.href = "#";
+		moreLikeThis.innerHTML = "Similar: " + moreLikeThisQuery;
+		moreLikeThis.href = location.href.replace("q="+originalQuery, "q="+encodeURIComponent(moreLikeThisQuery));
+		clusterNode.appendChild(moreLikeThis);
+				
 		cluster.documents.forEach(function(doc) {
 			var documentNode = doc.html;
 			clusterNode.appendChild(documentNode);
 		});
-		
-		var clusterFeatures = extractClusterFeatures(cluster);
 		
 		if (showFeatures) {
 			var featuresDiv = document.createElement("div");
@@ -436,14 +446,6 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 			};
 			clusterNode.appendChild(featuresDiv);
 		}
-			
-		var moreLikeThisQuery = getMoreLikeThisQuery(clusterFeatures);
-		var originalQuery = encodeURIComponent(getQuery());
-		var moreLikeThis = document.createElement("a");
-		moreLikeThis.href = "#";
-		moreLikeThis.innerHTML = "Similar: " + moreLikeThisQuery;
-		moreLikeThis.href = location.href.replace("q="+originalQuery, "q="+encodeURIComponent(moreLikeThisQuery));
-		clusterNode.appendChild(moreLikeThis);
 		
 		var clusterBreak = document.createElement("hr");
 		clusterNode.appendChild(clusterBreak);
