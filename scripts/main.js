@@ -12,6 +12,8 @@ function performClustering(clusteringConfig) {
 		testDataSubjects.forEach(function (subject) {
 			//console.log("Clustering results using ", clusteringConfig.method);
 			var fileName = subject+".n.xml";
+			//Add the query (filename) to the config for easy access
+			clusteringConfig.testDataQuery = subject;
 			var results = getSearchResults(clusteringConfig, fileName);
 			
 			if (results.length > 0) {
@@ -71,7 +73,12 @@ function getSearchResults(config, fileName, iteration) {
 	var processString = function(toProcess) {
 		//Split the string andd store the result in an array of individual words
 		var words = toProcess.split(" ");
-		var queryTerms = getQuery().split(" ");
+		var queryTerms = "";
+		if(useTestData){
+			queryTerms = config.testDataQuery.split("_");
+		}else{
+			queryTerms = getQuery().split(" ");
+		}
 		
 		//Go through each word and add it to an object as a new 
 		//attribute initialising its frequency to 0
@@ -98,7 +105,12 @@ function getSearchResults(config, fileName, iteration) {
 	//Remove the stopwords from a string
 	var removeStopWordsStemm = function(toProcess) {
 		//Get the query terms
-		var queryTerms = getQuery().split(" ");
+		var queryTerms = "";
+		if(useTestData){
+			queryTerms = config.testDataQuery.split("_");
+		}else{
+			queryTerms = getQuery().split(" ");
+		}
 		//Stem query terms
 		if(stemWords) {
 			for (var i = 0; i < queryTerms.length; i++) {
