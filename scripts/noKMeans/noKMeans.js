@@ -30,6 +30,26 @@ function clusterResultsUsingNoKMeans(results, threshold)
     		}
     	}
     }
+    var singles_cluster = new_cluster([], 0, null);
+    var i = 0;
+    while (i < clusters.length)
+    {
+    	if (clusters[i].documents.length == 1)
+    	{
+    		console.log(i);
+    		singles_cluster.documents.push(clusters[i].documents[0]);
+    		clusters.splice(i, 1);
+    	}
+    	else
+    	{
+    		i++;
+    	}
+    }
+    if (singles_cluster.documents.length > 0)
+    {
+    	clusters.push(singles_cluster);
+    	index(clusters);
+    }
     return clusters;
 }
 
@@ -90,7 +110,8 @@ function update(cluster, document)
 	}
 }
 
-function clone_object(obj) {
+function clone_object(obj) 
+{
     var temp = {};
     
     for (var frequency in obj)
@@ -98,4 +119,12 @@ function clone_object(obj) {
     	temp[frequency] = obj[frequency];
     }
     return temp;
+}
+
+function index(clusters)
+{
+	for (var i = 0; i < clusters.length; i++)
+	{
+		clusters[i].id = i;
+	}
 }
