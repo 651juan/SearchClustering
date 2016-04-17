@@ -435,13 +435,42 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 		
 		var clusterFeatures = extractClusterFeatures(cluster);
 			
+		var clusterHeading = document.createElement("div");
+		
 		var moreLikeThisQuery = getMoreLikeThisQuery(clusterFeatures);
 		var originalQuery = encodeURIComponent(getQuery());
-		var moreLikeThis = document.createElement("a");
-		moreLikeThis.href = "#";
-		moreLikeThis.innerHTML = "Similar: " + moreLikeThisQuery;
-		moreLikeThis.href = location.href.replace("q="+originalQuery, "q="+encodeURIComponent(moreLikeThisQuery));
-		clusterNode.appendChild(moreLikeThis);
+		
+		var findSimilarDiv = document.createElement("div");
+		findSimilarDiv.style.cssText = "text-align:left;display:inline-block;width:50%;";
+		
+		var findSimilar = document.createElement("a");
+		findSimilar.innerHTML = "Similar: " + moreLikeThisQuery;
+		findSimilar.href = location.href.replace("q="+originalQuery, "q="+encodeURIComponent(moreLikeThisQuery));
+		
+		var showHideClusterDiv = document.createElement("div");
+		showHideClusterDiv.style.cssText = "text-align:right;display:inline-block;width:50%;";
+		
+		var showHideCluster = document.createElement("button");
+		showHideCluster.innerHTML = "Collapse Cluster";
+		showHideCluster.onclick = function() {
+			var docs = clusterNode.getElementsByClassName("g");
+			for (var doc in docs) {
+				docs[doc].hidden = !docs[doc].hidden;
+			};
+			if (showHideCluster.innerHTML == "Collapse Cluster") {
+				showHideCluster.innerHTML = "Expand Cluster";
+			} else {
+				showHideCluster.innerHTML = "Collapse Cluster";
+			}
+		};
+		
+		findSimilarDiv.appendChild(findSimilar);
+		showHideClusterDiv.appendChild(showHideCluster);
+		
+		clusterHeading.appendChild(findSimilarDiv);
+		clusterHeading.appendChild(showHideClusterDiv);
+		
+		clusterNode.appendChild(clusterHeading);
 				
 		cluster.documents.forEach(function(doc) {
 			var documentNode = doc.html;
