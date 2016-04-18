@@ -36,8 +36,8 @@ function clusterObjects(resultObjects, vectorClusters) {
 		
 		var documents = Array();
 		tmpCluster.id = i;
-		
-		for(var j = 0; j < currentCluster.length; j++) {
+		tmpCluster.closestDocument = resultObjects[currentCluster[0][0]];
+		for(var j = 1; j < currentCluster.length; j++) {
 			var vectorIdx = currentCluster[j][0];
 			documents[documents.length] = resultObjects[vectorIdx];
 		}

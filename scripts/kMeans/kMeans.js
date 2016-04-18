@@ -545,6 +545,19 @@ function closestCentroid(point, centroids, distance) {
    return index;
 }
 
+function closestDocument(documents, centroid, distance) {
+   var min = Infinity, index = 0, cDoc;
+   
+   for (var i = 0; i < documents.length; i++) {
+	   var dist = distance(documents[i], centroid);
+	   if (dist < min) {
+         min = dist;
+		 cDoc = documents[i];
+		}
+   }
+   return cDoc;
+}
+
 //--->points - documents to cluster
 //--->k no of clusters
 //--->distance - string to chose distance calculataion 
@@ -608,6 +621,11 @@ function kmeans(points, k, distance, snapshotPeriod, snapshotCb) {
          snapshotCb(clusters);
       }
    }
+   
+   for(var i = 0; i < clusters.length; i++) {
+		var doc = closestDocument(clusters[i], centroids[i], distance);
+		clusters[i].unshift(doc);
+	}
    return clusters;
 }
 
