@@ -438,13 +438,15 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 		var clusterHeading = document.createElement("div");
 		
 		var moreLikeThisQuery = getMoreLikeThisQuery(clusterFeatures);
-		var originalQuery = encodeURIComponent(getQuery());
+		//var originalQuery = encodeURIComponent(getQuery());
+		var originalQuery = getOriginalQuery();
 		
 		var findSimilarDiv = document.createElement("div");
 		findSimilarDiv.style.cssText = "text-align:left;display:inline-block;width:50%;";
 		
 		var findSimilar = document.createElement("a");
 		findSimilar.innerHTML = "Similar: " + moreLikeThisQuery;
+		console.log(originalQuery);
 		findSimilar.href = location.href.replace("q="+originalQuery, "q="+encodeURIComponent(moreLikeThisQuery));
 		
 		var showHideClusterDiv = document.createElement("div");
@@ -492,6 +494,10 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 		clusterNode.appendChild(clusterBreak);
 			
 		return clusterNode;
+	};
+	
+	function getOriginalQuery() {
+		return location.search.substring(location.search.indexOf("q=")+2, location.search.indexOf("&"));
 	};
 	
 	function getMoreLikeThisQuery(features) {
