@@ -9,7 +9,10 @@ function performClustering(clusteringConfig) {
 		var str = "subTopicID\tresultID\n";
 		console.log(str);
 		var iteration = 1;
-		testDataSubjects.forEach(function (subject) {
+		//testDataSubjects.forEach(function (subject) {
+		for (var i = 0; i < testDataSubjects.length; i++) {
+			var subject = testDataSubjects[i];
+			//console.log(subject);
 			//console.log("Clustering results using ", clusteringConfig.method);
 			var fileName = subject+".n.xml";
 			//Add the query (filename) to the config for easy access
@@ -24,7 +27,7 @@ function performClustering(clusteringConfig) {
 			//console.log(clusters);
 			//console.log("Results clustered.");
 			iteration++;
-		});
+		};
 	} else {
 		console.log("Clustering results using ", clusteringConfig.method);
 		
@@ -35,7 +38,7 @@ function performClustering(clusteringConfig) {
 			clusterGoogleResults(clusters, clusteringConfig, 0);
 		}
 		
-		//console.log(clusters);
+		console.log(clusters);
 		console.log("Results clustered.");
 	};
 };
@@ -446,14 +449,13 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 		
 		var findSimilar = document.createElement("a");
 		findSimilar.innerHTML = "Similar: " + moreLikeThisQuery;
-		console.log(originalQuery);
 		findSimilar.href = location.href.replace("q="+originalQuery, "q="+encodeURIComponent(moreLikeThisQuery));
 		
 		var showHideClusterDiv = document.createElement("div");
 		showHideClusterDiv.style.cssText = "text-align:right;display:inline-block;width:50%;";
 		
 		var showHideCluster = document.createElement("button");
-		showHideCluster.innerHTML = "Collapse Cluster";
+		showHideCluster.innerHTML = "Expand Cluster";
 		showHideCluster.onclick = function() {
 			var docs = clusterNode.getElementsByClassName("g");
 			for (var doc in docs) {
@@ -476,6 +478,7 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 				
 		cluster.documents.forEach(function(doc) {
 			var documentNode = doc.html;
+			documentNode.hidden = true;
 			clusterNode.appendChild(documentNode);
 		});
 		
@@ -497,7 +500,9 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 	};
 	
 	function getOriginalQuery() {
-		return location.search.substring(location.search.indexOf("q=")+2, location.search.indexOf("&"));
+		var queryStart = location.href.indexOf("q=") + 2;
+		var queryEnd = location.href.indexOf("&", queryStart) == -1 ? location.href.length : location.href.indexOf("&", queryStart);
+		return location.href.substring(queryStart, queryEnd);
 	};
 	
 	function getMoreLikeThisQuery(features) {
