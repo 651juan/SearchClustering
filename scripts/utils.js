@@ -37,3 +37,38 @@ var extractClusterFeatures = function(cluster) {
 	
 	return featureList;
 };
+
+//Converts an array vector to csv row
+function ConvertToCSV(array) {
+	var str = "";
+
+	for (var i in array) {
+	if (array.hasOwnProperty(i)) {
+		  str += array[i] +',';
+	}
+	}
+
+	/*Object.keys(array).map(function(key,i) {
+		  return i;
+	});*/
+
+	str = str.substring(0, str.length - 1);
+
+	return str;
+}
+
+function csvHelper(results) {
+	var stringResult = "";
+	for(var i = 0; i < results.length; i++) {
+		var tmpVector = Array();
+		var cResultData = results[i].data;
+		
+		for (var attrib in cResultData) {
+			if (cResultData.hasOwnProperty(attrib)) {
+				tmpVector[tmpVector.length] = cResultData[attrib];
+			}
+		}
+		stringResult += ConvertToCSV(tmpVector)+"\n";
+	}
+	console.log(stringResult);
+}
