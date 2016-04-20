@@ -36,7 +36,7 @@ function clusterResultsUsingNoKMeans(results, threshold)
     {
     	if (clusters[i].documents.length == 1)
     	{
-    		console.log(i);
+    		//console.log(i);
     		singles_cluster.documents.push(clusters[i].documents[0]);
     		clusters.splice(i, 1);
     	}

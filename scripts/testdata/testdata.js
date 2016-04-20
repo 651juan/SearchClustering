@@ -43,7 +43,8 @@ function getTestDataResults(filename){
 		
 		var contentDiv2 = document.createElement('div');
 		
-		var contentSpan = document.createElement("SPAN");
+		var contentSpan = document.createElement("span");
+		contentSpan.className = "st";
 		contentSpan.innerHTML = dContent;
 		
 		titleH3.appendChild(titleURL);
@@ -56,6 +57,6 @@ function getTestDataResults(filename){
 		allresults[allresults.length] = gDiv;
 	}
 	
-	
+	//console.log(allresults);
 	return allresults;
 }

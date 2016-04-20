@@ -1,5 +1,5 @@
-//var _ = require('underscore');
 
+//var _ = require('underscore');
 var Som = function(_config)
 {
 	var that = this;
@@ -34,7 +34,7 @@ var Som = function(_config)
 	{
 		return (_a > _b) ? _a : _b;
 	};
-
+	
 	this.traineeIndex = {};
 	this.width = config.width || 100;
 	this.height = config.height || 100;
