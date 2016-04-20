@@ -623,6 +623,10 @@ function kmeans(points, k, distance, snapshotPeriod, snapshotCb) {
    }
    
    for(var i = 0; i < clusters.length; i++) {
+	   if(typeof clusters[i] === 'undefined'){
+			break;
+	   }
+
 		var doc = closestDocument(clusters[i], centroids[i], distance);
 		clusters[i].unshift(doc);
 	}
