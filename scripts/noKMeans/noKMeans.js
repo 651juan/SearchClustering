@@ -2,11 +2,11 @@ function clusterResultsUsingNoKMeans(results, threshold)
 {
 	//console.log(threshold);
     var clusters = [];
-    var distances = [];
+    var similarities = [];
     var min_index = 0;
     for (var i = 0; i < results.length; i++)
     {
-    	distances = []
+    	similarities = []
     	min_index = 0;
     	if (clusters.length == 0)
     	{
@@ -16,16 +16,21 @@ function clusterResultsUsingNoKMeans(results, threshold)
     	{
     		for (var j = 0; j < clusters.length; j++)
     		{
-    			distances.push(calc_cosine_distance(results[i].data, clusters[j].data));
+    			similarities.push(calc_cosine_similarity(results[i].data, clusters[j].data));
     		}
-    		min_index = minimum_distance_index(distances);
-    		if (distances[min_index] <= threshold)
+    		max_index = maximum_similarity_index(similarities);
+    		//console.log("Similarities:")
+    		//console.log(similarities)
+    		//console.log("Index: "+max_index)
+    		if (similarities[max_index] >= threshold)
     		{
-    			clusters[min_index].documents.push(results[i]);
-    			update(clusters[min_index], results[i]);
+    			//console.log("Accepted");
+    			clusters[max_index].documents.push(results[i]);
+    			update(clusters[max_index], results[i]);
     		}
     		else
     		{
+    			//console.log("Rejected");
     			clusters.push(new_cluster([results[i]], clusters.length, clone_object(results[i].data)));
     		}
     	}
@@ -53,7 +58,7 @@ function clusterResultsUsingNoKMeans(results, threshold)
     return clusters;
 }
 
-function calc_cosine_distance(frequency_list1, frequency_list2)
+function calc_cosine_similarity(frequency_list1, frequency_list2)
 {
 	//Dot Product
 	var dot_product = 0;
@@ -71,10 +76,10 @@ function calc_cosine_distance(frequency_list1, frequency_list2)
 		scalar2 = scalar2 + Math.pow(frequency_list2[frequency], 2);
 	}
 	scalar_product = Math.sqrt(scalar1) * Math.sqrt(scalar2)
-	//Cosine Distance
-	var cosine_distance = dot_product/scalar_product;
+	//Cosine Similarity
+	var cosine_similarity = dot_product/scalar_product;
 	
-	return cosine_distance;
+	return cosine_similarity;
 }
 
 function new_cluster(document_list, cluster_id, word_list)
@@ -87,19 +92,19 @@ function new_cluster(document_list, cluster_id, word_list)
 	return cluster;
 }
 
-function minimum_distance_index(distances)
+function maximum_similarity_index(similarities)
 {
-	var minimum = distances[0];
-	var minimum_index = 0;
-	for (var j = 0; j < distances.length; j++)
+	var maximum = similarities[0];
+	var maximum_index = 0;
+	for (var j = 0; j < similarities.length; j++)
 	{
-		if (distances[j] < minimum)
+		if (similarities[j] > maximum)
 		{
-			minimum = distances[j];
-			minimum_index = j;
+			maximum = similarities[j];
+			maximum_index = j;
 		}
 	}
-	return minimum_index;
+	return maximum_index;
 }
 
 function update(cluster, document)
