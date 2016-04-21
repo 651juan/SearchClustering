@@ -19,6 +19,8 @@ function performClustering(clusteringConfig) {
 			clusteringConfig.testDataQuery = subject;
 			var results = getSearchResults(clusteringConfig, fileName);
 			
+			//csvHelper(results);
+	
 			if (results.length > 0) {
 				var clusters = getClusters(results, clusteringConfig);
 				clusterGoogleResults(clusters, clusteringConfig, iteration);
