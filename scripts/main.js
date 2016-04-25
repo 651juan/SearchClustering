@@ -26,7 +26,9 @@ function performClustering(clusteringConfig) {
 				clusterGoogleResults(clusters, clusteringConfig, iteration);
 			}
 			
-			//console.log(clusters);
+			if (clusteringConfig.showClusters) {
+				console.log(clusters);
+			}
 			//console.log("Results clustered.");
 			iteration++;
 		};
@@ -40,7 +42,9 @@ function performClustering(clusteringConfig) {
 			clusterGoogleResults(clusters, clusteringConfig, 0);
 		}
 		
-		console.log(clusters);
+		if (clusteringConfig.showClusters) {
+			console.log(clusters);
+		}
 		console.log("Results clustered.");
 	};
 };
@@ -235,11 +239,11 @@ function getSearchResults(config, fileName, iteration) {
 				
 				//Remove symbols
 				if(removeSymbols){
-					tmpTitle = tmpTitle.replace(/[^a-zA-Z0-9\s]/g, "");
+					tmpTitle = tmpTitle.replace(/[^a-zA-Z0-9\s]/g, " ");
 				}
 				//Remove Numbers
 				if(removeNumbers) {
-					tmpTitle = tmpTitle.replace(/[\d+]/g, "");
+					tmpTitle = tmpTitle.replace(/[\d+]/g, " ");
 				}
 				
 				result.wordReference = getWordReference(result.originalReference, tmpTitle);
@@ -266,7 +270,7 @@ function getSearchResults(config, fileName, iteration) {
 				}
 				//Remove Numbers
 				if(removeNumbers) {
-					tmpUrl = tmpUrl.replace(/[\d+]/g, "");
+					tmpUrl = tmpUrl.replace(/[\d+]/g, " ");
 				}
 				
 				result.wordReference = getWordReference(result.originalReference, tmpUrl);
@@ -288,11 +292,11 @@ function getSearchResults(config, fileName, iteration) {
 				var tmpContent = getContent(results[i]).toLowerCase();
 				//Remove symbols
 				if(removeSymbols){
-					tmpContent = tmpContent.replace(/[^a-zA-Z0-9\s]/g, "");
+					tmpContent = tmpContent.replace(/[^a-zA-Z0-9\s]/g, " ");
 				}
 				//Remove Numbers
 				if(removeNumbers) {
-					tmpContent = tmpContent.replace(/[\d+]/g, "");
+					tmpContent = tmpContent.replace(/[\d+]/g, " ");
 				}
 				
 				result.wordReference = getWordReference(result.originalReference, tmpContent);
@@ -378,7 +382,7 @@ function getSearchResults(config, fileName, iteration) {
 				};
 			};		
 		};
-		
+		//console.log(wordsHistogram);
 		// Remove from histogram those words which appear in only one document
 		for (var word in wordsHistogram) {
 			if (wordsHistogram[word] == 1) {

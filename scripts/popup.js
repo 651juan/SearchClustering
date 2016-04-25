@@ -13,6 +13,7 @@ function sendMessage() {
 		stemWords: document.getElementById('stemWords').checked,
 		showFeatures: document.getElementById('showFeatures').checked,
 		showResults: document.getElementById('showResults').checked,
+		showClusters: document.getElementById('showClusters').checked,
 		km: {
 			noOfClusters: document.getElementById('noOfClusters').value
 		},

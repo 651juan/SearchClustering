@@ -7,8 +7,8 @@
 		<div id="algorithmSelect">
 			<div>
 				<select id="algorithmChoice">
-					<option value="km" selected>K-Means</option>
-					<option value="nkm">No-K-Means</option>
+					<option value="km">K-Means</option>
+					<option value="nkm" selected>No-K-Means</option>
 					<option value="gmm">Gaussian Mixture Models</option>
 					<option value="som">Self-Organising Maps</option>
 				</select> 
@@ -33,22 +33,24 @@
 				<br/>
 				<input type="checkbox" id="removeShortWords" value="removeShortWords"> <label for="removeShortWords">Remove Short Words</label> 
 				<br/>
-				<input type="checkbox" id="removeSingleDocumentTerms" value="removeSingleDocumentTerms" checked> <label for="removeSingleDocumentTerms">Remove Terms in Single Documents</label> 
+				<input type="checkbox" id="removeSingleDocumentTerms" value="removeSingleDocumentTerms"> <label for="removeSingleDocumentTerms">Remove Terms in Single Documents</label> 
 				<br/>
 				<input type="checkbox" id="stemWords" value="stemWords" checked> <label for="stemWords">Stem Words</label> 
 				<br/>
 				<input type="checkbox" id="showFeatures" value="showFeatures"> <label for="showFeatures">Show Cluster Features</label> 
 				<br/>
 				<input type="checkbox" id="showResults" value="showResults"> <label for="showResults">Show Semeval Results</label> 
+				<br/>
+				<input type="checkbox" id="showClusters" value="showClusters"> <label for="showClusters">Show Clusters in Console</label> 
 			</div>
 			
 			<br/>
 			
-			<div id="kmSettings" class="show">
+			<div id="kmSettings" class="hide">
 				<input type="number" id="noOfClusters" name="clusters" min="1" max="100" step="1" value="5"> <label for="noOfClusters">No of Clusters (Kmeans) </label> 
 			</div>
 			
-			<div id="nkmSettings" class="hide">
+			<div id="nkmSettings" class="show">
 				<input type="number" id="nkmThreshold" name="thresh" min="0" max="1" step="0.01" value="0.05"> <label for="nkmThreshold">Threshold</label> 
 			</div>
 			

@@ -4,6 +4,7 @@ function clusterResultsUsingNoKMeans(results, threshold)
     var clusters = [];
     var similarities = [];
     var min_index = 0;
+	//results = shuffle(results);
     for (var i = 0; i < results.length; i++)
     {
     	similarities = []
