@@ -290,6 +290,13 @@ function getSearchResults(config, fileName, iteration) {
 			try{
 				//Convert it to lowercase
 				var tmpContent = getContent(results[i]).toLowerCase();
+				
+				var dateString = tmpContent.substr(0, 12);
+				var date = new Date(dateString);
+				if (!isNaN(date.getTime())) {
+					//tmpContent = tmpContent.substr(12, tmpContent.length);
+				}
+				
 				//Remove symbols
 				if(removeSymbols){
 					tmpContent = tmpContent.replace(/[^a-zA-Z0-9\s]/g, " ");

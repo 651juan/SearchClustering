@@ -38,6 +38,7 @@ function getTestDataResults(filename){
 		div = document.createElement("div");
 		div.innerHTML = dContent;
 		dContent = div.textContent || div.innerText || "";
+		
 		//console.log("After: ", dContent);
 		
 		//Main div
