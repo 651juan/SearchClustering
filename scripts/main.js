@@ -18,9 +18,8 @@ function performClustering(clusteringConfig) {
 			//Add the query (filename) to the config for easy access
 			clusteringConfig.testDataQuery = subject;
 			var results = getSearchResults(clusteringConfig, fileName);
-			
 			//csvHelper(results);
-	
+				
 			if (results.length > 0) {
 				var clusters = getClusters(results, clusteringConfig);
 				clusterGoogleResults(clusters, clusteringConfig, iteration);
@@ -29,6 +28,7 @@ function performClustering(clusteringConfig) {
 			if (clusteringConfig.showClusters) {
 				console.log(clusters);
 			}
+			
 			//console.log("Results clustered.");
 			iteration++;
 		};
@@ -78,8 +78,13 @@ function getSearchResults(config, fileName, iteration) {
 	var removeSingleDocumentTerms = config.removeSingleDocumentTerms;
 	var queryNumber = iteration;
 
+	stemmedStopWords = [];
+	for (var j = 0; j < stopwords.length; j++) {
+		stemmedStopWords.push(stemmer(stopwords[j]));
+	};
+	
 	//Splits string by " " and stores it in an object
-	var processString = function(toProcess) {
+	var processString = function(toProcess) {			
 		//Split the string andd store the result in an array of individual words
 		var words = toProcess.split(" ");
 		var queryTerms = "";
@@ -150,12 +155,12 @@ function getSearchResults(config, fileName, iteration) {
 			
 			if(removeStopWords) {
 				//If it is not a stop word concat it with the result
-				if(stopwords.indexOf(words[i]) < 0 && urlStopwords.indexOf(words[i]) < 0) {
+				if(stopwords.indexOf(words[i]) < 0 && stemmedStopWords.indexOf(words[i]) < 0 && urlStopwords.indexOf(words[i]) < 0) {
 					if(removeShortWords) {
 						if(words[i].length >= 3) {
 							result += words[i]+" ";
 						}
-					}else{
+					} else{
 						result += words[i]+" ";
 					}
 				}
@@ -169,7 +174,6 @@ function getSearchResults(config, fileName, iteration) {
 				}
 			}
 		}
-		
 		return result;
 	}
 	
