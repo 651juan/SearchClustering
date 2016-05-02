@@ -155,7 +155,7 @@ function getSearchResults(config, fileName, iteration) {
 			
 			if(removeStopWords) {
 				//If it is not a stop word concat it with the result
-				if(stopwords.indexOf(words[i]) < 0 && stemmedStopWords.indexOf(words[i]) < 0 && urlStopwords.indexOf(words[i]) < 0) {
+				if(stopwords.indexOf(words[i]) < 0 && stemmedStopWords.indexOf(words[i]) < 0) {
 					if(removeShortWords) {
 						if(words[i].length >= 3) {
 							result += words[i]+" ";
