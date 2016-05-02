@@ -18,8 +18,14 @@ function performClustering(clusteringConfig) {
 			//Add the query (filename) to the config for easy access
 			clusteringConfig.testDataQuery = subject;
 			var results = getSearchResults(clusteringConfig, fileName);
+<<<<<<< HEAD
 			//csvHelper(results);
 				
+=======
+			
+			csvHelper(results);
+	
+>>>>>>> origin/master
 			if (results.length > 0) {
 				var clusters = getClusters(results, clusteringConfig);
 				clusterGoogleResults(clusters, clusteringConfig, iteration);
@@ -54,7 +60,7 @@ function getClusters(results, config) {
 	// Automatically cluster results using SOM and display clusters in the Google Results page
 	switch (config.method) {
 		case "km": 
-			return clusterResultsUsingKMeans(results, config.km.noOfClusters); 
+			return clusterResultsUsingKMeans(results, config.km.noOfClusters, config.km.useWikipedia); 
 		case "nkm":
 			return clusterResultsUsingNoKMeans(results, config.nkm.threshold);
 		case "gmm":
