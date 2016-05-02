@@ -18,14 +18,8 @@ function performClustering(clusteringConfig) {
 			//Add the query (filename) to the config for easy access
 			clusteringConfig.testDataQuery = subject;
 			var results = getSearchResults(clusteringConfig, fileName);
-<<<<<<< HEAD
 			//csvHelper(results);
-				
-=======
 			
-			csvHelper(results);
-	
->>>>>>> origin/master
 			if (results.length > 0) {
 				var clusters = getClusters(results, clusteringConfig);
 				clusterGoogleResults(clusters, clusteringConfig, iteration);
