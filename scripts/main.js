@@ -19,7 +19,7 @@ function performClustering(clusteringConfig) {
 			clusteringConfig.testDataQuery = subject;
 			var results = getSearchResults(clusteringConfig, fileName);
 			
-			//csvHelper(results);
+			csvHelper(results);
 	
 			if (results.length > 0) {
 				var clusters = getClusters(results, clusteringConfig);
@@ -54,7 +54,7 @@ function getClusters(results, config) {
 	// Automatically cluster results using SOM and display clusters in the Google Results page
 	switch (config.method) {
 		case "km": 
-			return clusterResultsUsingKMeans(results, config.km.noOfClusters); 
+			return clusterResultsUsingKMeans(results, config.km.noOfClusters, config.km.useWikipedia); 
 		case "nkm":
 			return clusterResultsUsingNoKMeans(results, config.nkm.threshold);
 		case "gmm":

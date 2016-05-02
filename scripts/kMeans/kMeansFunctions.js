@@ -48,13 +48,37 @@ function clusterObjects(resultObjects, vectorClusters) {
 	return clusters;
 }
 
-function clusterResultsUsingKMeans(resultObjects,k) {
-	var clusters = clusterfck.kmeans(resultObjectsToVectors(resultObjects), k);
+function clusterResultsUsingKMeans(resultObjects,defaultK, useWikiArticles, enforceK) {
+	if(useWikiArticles === undefined) {
+		useWikiArticles = false;
+	}
+	
+	if(enforceK === undefined) {
+		enforceK = false;
+	}
+
+	var data = {}
+	data.points = resultObjectsToVectors(resultObjects);
+	var wikiArticles = [];
+	if(useWikiArticles) {
+		for(var i = 0; i < resultObjects.length; i++) {
+			if(resultObjects[i].actualTitle.indexOf("wikipedia") > -1){
+				wikiArticles[wikiArticles.length] = data.points[i];
+			}
+		}
+	}
+	
+	var k = wikiArticles.length;
+	data.initialSeeds = wikiArticles
+	
+	var clusters = clusterfck.kmeans(data, k);
 	
 	var noOfClusters = clusters.filter(function(value) { return value !== undefined }).length;
 
 	while(noOfClusters != k) {
-		clusters = clusterfck.kmeans(resultObjectsToVectors(resultObjects), k);
+		data.initialSeeds = undefined;
+		k = defaultK;
+		clusters = clusterfck.kmeans(data, k);
 		noOfClusters = clusters.filter(function(value) { return value !== undefined }).length;
 	}
 	

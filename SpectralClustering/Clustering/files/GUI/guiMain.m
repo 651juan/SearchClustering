@@ -49,7 +49,7 @@ if ~isequal(handles.FileName, 0)
     set(handles.lstPlotDimensions, 'Value', []);
     
     % Load Dataset
-    handles.Data = csvread(strcat('c',int2str(i),'.csv'));
+    handles.Data = csvread(strcat(int2str(i),'.csv'));
     [~, DataName, DataExt] = fileparts(handles.FileName);
     
     % if data is labeled, remove labels
