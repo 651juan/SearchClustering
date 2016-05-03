@@ -28,7 +28,7 @@ function clusterResultsUsingNoKMeans(results, threshold)
     		{
     			//console.log("Accepted");
     			clusters[max_index].documents.push(results[i]);
-    			update(clusters[max_index], results[i]);
+    			update(clusters[max_index]);
     		}
     		else
     		{
@@ -109,12 +109,24 @@ function maximum_similarity_index(similarities)
 	return maximum_index;
 }
 
-function update(cluster, document)
-{
+function update(cluster)
+{	
+	console.log(cluster);
+	var average_term_frequency = 0;
 	for (var frequency in cluster.data)
 	{
-		cluster.data[frequency] = (cluster.data[frequency] + document.data[frequency])/2;
+		average_term_frequency = 0;
+		for (var i = 0; i < cluster.documents.length; i++)
+		{
+			average_term_frequency = average_term_frequency + cluster.documents[i].data[frequency];
+		}
+		average_term_frequency = average_term_frequency/cluster.documents.length;
+		cluster.data[frequency] = average_term_frequency;
 	}
+	//for (var frequency in cluster.data)
+	//{
+	//	cluster.data[frequency] = (cluster.data[frequency] + document.data[frequency])/2;
+	//}
 }
 
 function clone_object(obj) 
