@@ -77,7 +77,7 @@ function calc_cosine_similarity(frequency_list1, frequency_list2)
 		scalar1 = scalar1 + Math.pow(frequency_list1[frequency], 2);
 		scalar2 = scalar2 + Math.pow(frequency_list2[frequency], 2);
 	}
-	scalar_product = Math.sqrt(scalar1) * Math.sqrt(scalar2)
+	scalar_product = Math.sqrt(scalar1) * Math.sqrt(scalar2);
 	//Cosine Similarity
 	var cosine_similarity = dot_product/scalar_product;
 	
