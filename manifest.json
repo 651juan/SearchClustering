@@ -27,7 +27,7 @@
 	
 	"content_scripts": [{
 		"matches": ["*://*/*"],
-		"js": ["scripts/utils.js", "scripts/textanalysis/porterStemmer.js", "scripts/som/som.js", "scripts/kMeans/kMeans.js", "scripts/kMeans/kMeansFunctions.js", "scripts/testdata/testdata.js","scripts/main.js", "scripts/gmm/gmm.js", "scripts/numeric.js", "scripts/gmm/DPMixtureModel.js", "scripts/gmm/GaussianComponent.js", "scripts/noKMeans/noKMeans.js"]
+		"js": ["scripts/textanalysis/porterStemmer.js", "scripts/utils.js", "scripts/som/som.js", "scripts/kMeans/kMeans.js", "scripts/kMeans/kMeansFunctions.js", "scripts/testdata/testdata.js","scripts/main.js", "scripts/gmm/gmm.js", "scripts/numeric.js", "scripts/gmm/DPMixtureModel.js", "scripts/gmm/GaussianComponent.js", "scripts/noKMeans/noKMeans.js"]
 	}],
 	
 	"web_accessible_resources": [

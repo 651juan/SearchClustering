@@ -1,7 +1,49 @@
 // Listen to command from the popup
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-		performClustering(request.config);
+		//performClustering(request.config);
+		automatedSOMTests();
 });
+
+function automatedSOMTests() {
+	var config = {
+		method: "som",
+		useTestData: true,
+		includeTitle: true,
+		includeURL: false,
+		removeQueryTerms: true,
+		removeStopWords: true,
+		removeSymbols: true,
+		removeNumbers: false,
+		removeShortWords: false,
+		removeSingleDocumentTerms: true,
+		stemWords: true,
+		showFeatures: false,
+		showResults: true,
+		showClusters: false,
+		som: {}
+	};
+	var soms = [];
+	for (var i = 3; i <= 10; i++) {
+		for (var j = 5; j <= 20; j+=3) {
+			var som = {
+				networkIterations: j,
+				networkLearningRate: 0.1,
+				networkWidth: i,
+				networkHeight: i
+			};
+			soms.push(som);
+		};
+	};
+	for (var som in soms) {
+		config.som = soms[som];
+		console.log("----------");
+		console.log("Epochs:", config.som.networkIterations),
+		console.log("Learning Rate:", config.som.networkLearningRate),
+		console.log("Network Width:", config.som.networkWidth),
+		console.log("----------");
+		performClustering(config);
+	};
+};
 
 //Performs clustering of the results on the Google page according to the configuration provided
 function performClustering(clusteringConfig) {
@@ -77,11 +119,6 @@ function getSearchResults(config, fileName, iteration) {
 	var removeShortWords = config.removeShortWords;
 	var removeSingleDocumentTerms = config.removeSingleDocumentTerms;
 	var queryNumber = iteration;
-
-	stemmedStopWords = [];
-	for (var j = 0; j < stopwords.length; j++) {
-		stemmedStopWords.push(stemmer(stopwords[j]));
-	};
 	
 	//Splits string by " " and stores it in an object
 	var processString = function(toProcess) {			
