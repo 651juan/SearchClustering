@@ -111,7 +111,6 @@ function maximum_similarity_index(similarities)
 
 function update(cluster)
 {	
-	console.log(cluster);
 	var average_term_frequency = 0;
 	for (var frequency in cluster.data)
 	{
