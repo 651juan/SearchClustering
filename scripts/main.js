@@ -1,7 +1,7 @@
 // Listen to command from the popup
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-		//performClustering(request.config);
-		automatedSOMTests();
+		performClustering(request.config);
+		//automatedSOMTests();
 });
 
 function automatedSOMTests() {
@@ -33,6 +33,17 @@ function automatedSOMTests() {
 			};
 			soms.push(som);
 		};
+	};
+	for (var i = 11; i <= 25; i+=2) {
+		for (var j = 5; j <= 10; j++) {
+			var som = {
+				networkIterations: j,
+				networkLearningRate: 0.1,
+				networkWidth: i,
+				networkHeight: i
+			};
+			soms.push(som);
+		}
 	};
 	for (var som in soms) {
 		config.som = soms[som];
