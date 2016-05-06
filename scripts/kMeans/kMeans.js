@@ -587,6 +587,7 @@ function kmeans(data, k, distance, snapshotPeriod, snapshotCb) {
    //--->Get k random vectors from the given array of vectors
    var centroids;
    if(initialSeeds === undefined || initialSeeds.length <= 1) {
+		k = data.defaultK;
 		centroids = randomCentroids(points, k);
    }else{
 		centroids = initialSeeds;

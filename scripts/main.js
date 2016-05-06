@@ -107,7 +107,7 @@ function getClusters(results, config) {
 	// Automatically cluster results using SOM and display clusters in the Google Results page
 	switch (config.method) {
 		case "km": 
-			return clusterResultsUsingKMeans(results, config.km.noOfClusters, config.km.useWikipedia); 
+			return clusterResultsUsingKMeans(results); 
 		case "nkm":
 			return clusterResultsUsingNoKMeans(results, config.nkm.threshold);
 		case "gmm":

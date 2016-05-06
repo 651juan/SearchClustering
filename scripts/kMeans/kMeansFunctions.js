@@ -48,17 +48,15 @@ function clusterObjects(resultObjects, vectorClusters) {
 	return clusters;
 }
 
-function clusterResultsUsingKMeans(resultObjects,defaultK, useWikiArticles, enforceK) {
+function clusterResultsUsingKMeans(resultObjects, useWikiArticles) {
+	defaultK = 5;
 	if(useWikiArticles === undefined) {
 		useWikiArticles = false;
-	}
-	
-	if(enforceK === undefined) {
-		enforceK = false;
 	}
 
 	var data = {}
 	data.points = resultObjectsToVectors(resultObjects);
+	data.defaultK = defaultK;
 	var wikiArticles = [];
 	if(useWikiArticles) {
 		for(var i = 0; i < resultObjects.length; i++) {
