@@ -16,7 +16,7 @@ function sendMessage() {
 		showClusters: document.getElementById('showClusters').checked,
 		km: {
 			noOfClusters: document.getElementById('noOfClusters').value,
-			useWikipedia: document.getElementById('useWikipedia').value
+			useWikipedia: document.getElementById('useWikipedia').checked
 		},
 		nkm: {
 			threshold: document.getElementById('nkmThreshold').value

@@ -68,17 +68,19 @@ function clusterResultsUsingKMeans(resultObjects,defaultK, useWikiArticles, enfo
 		}
 	}
 	
-	var k = wikiArticles.length;
-	data.initialSeeds = wikiArticles
-	
-	var clusters = clusterfck.kmeans(data, k);
+	var k = defaultK;
+	if(useWikiArticles){
+		k = wikiArticles.length;
+		data.initialSeeds = wikiArticles;
+	}
+	var clusters = clusterfck.kmeans(data, k,"cosineSim");
 	
 	var noOfClusters = clusters.filter(function(value) { return value !== undefined }).length;
 
 	while(noOfClusters != k) {
 		data.initialSeeds = undefined;
 		k = defaultK;
-		clusters = clusterfck.kmeans(data, k);
+		clusters = clusterfck.kmeans(data, k, "cosineSim");
 		noOfClusters = clusters.filter(function(value) { return value !== undefined }).length;
 	}
 	

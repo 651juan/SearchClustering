@@ -502,6 +502,20 @@ require.define("/distance.js", function (require, module, exports, __dirname, __
       }
       return Math.sqrt(total);
    },
+   cosineSim: function(v1, v2) {
+	   var dotProd = 0;
+	   var d1 = 0;
+	   var d2 = 0;
+	   for(var i = 1; i < v1.length; i++) {
+			d1 += Math.pow(v1[i],2);
+			d2 += Math.pow(v2[i],2);
+			dotProd += (v1[i]*v2[i]);
+		}
+		d1 = Math.sqrt(d1);
+		d2 = Math.sqrt(d2);
+		var denom = d1*d2;
+		return 1-(dotProd/denom);
+	},
    manhattan: function(v1, v2) {
      var total = 0;
      for (var i = 1; i < v1.length ; i++) {
