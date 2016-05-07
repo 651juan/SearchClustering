@@ -45,6 +45,19 @@ function automatedSOMTests() {
 			soms.push(som);
 		}
 	};
+	// for (var i = 3; i <= 8; i++) {
+		// for (var j = 5; j <= 10; j++) {
+			// for (var k = 0.05; k <= 0.2; k+=0.5) {
+				// var som = {
+					// networkIterations: j,
+					// networkLearningRate: k,
+					// networkWidth: i,
+					// networkHeight: i
+				// };
+				// soms.push(som);
+			// };
+		// };
+	// };
 	for (var som in soms) {
 		config.som = soms[som];
 		console.log("----------");
@@ -86,7 +99,7 @@ function performClustering(clusteringConfig) {
 			iteration++;
 		};
 	} else {
-		console.log("Clustering results using ", clusteringConfig.method);
+		//console.log("Clustering results using ", clusteringConfig.method);
 		
 		var results = getSearchResults(clusteringConfig, null);
 		
@@ -98,7 +111,7 @@ function performClustering(clusteringConfig) {
 		if (clusteringConfig.showClusters) {
 			console.log(clusters);
 		}
-		console.log("Results clustered.");
+		//console.log("Results clustered.");
 	};
 };
 
@@ -138,7 +151,7 @@ function getSearchResults(config, fileName, iteration) {
 		var queryTerms = "";
 		if(useTestData){
 			queryTerms = config.testDataQuery.split("_");
-		}else{
+		} else {
 			queryTerms = getQuery().split(" ");
 		}
 		
@@ -519,31 +532,44 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 		var showHideClusterDiv = document.createElement("div");
 		showHideClusterDiv.style.cssText = "text-align:right;display:inline-block;width:50%;";
 		
-		var showHideCluster = document.createElement("button");
-		showHideCluster.innerHTML = "Expand Cluster";
-		showHideCluster.onclick = function() {
-			var docs = clusterNode.getElementsByClassName("g");
-			for (var doc in docs) {
-				docs[doc].hidden = !docs[doc].hidden;
+		findSimilarDiv.appendChild(findSimilar);
+		clusterHeading.appendChild(findSimilarDiv);
+		
+		if (cluster.documents.length > 1) {
+			var showHideCluster = document.createElement("button");
+			showHideCluster.innerHTML = "Expand Cluster";
+			showHideCluster.onclick = function() {
+				var docs = clusterNode.getElementsByClassName("g");
+				for (var doc in docs) {
+					docs[doc].hidden = !docs[doc].hidden; 
+					if (docs[doc].closestDocument) {
+						docs[doc].hidden = false;
+					};
+				};
+				if (showHideCluster.innerHTML == "Collapse Cluster") {
+					showHideCluster.innerHTML = "Expand Cluster";
+				} else {
+					showHideCluster.innerHTML = "Collapse Cluster";
+				}
 			};
-			if (showHideCluster.innerHTML == "Collapse Cluster") {
-				showHideCluster.innerHTML = "Expand Cluster";
-			} else {
-				showHideCluster.innerHTML = "Collapse Cluster";
-			}
+			showHideClusterDiv.appendChild(showHideCluster);
+			clusterHeading.appendChild(showHideClusterDiv);
 		};
 		
-		findSimilarDiv.appendChild(findSimilar);
-		showHideClusterDiv.appendChild(showHideCluster);
-		
-		clusterHeading.appendChild(findSimilarDiv);
-		clusterHeading.appendChild(showHideClusterDiv);
 		
 		clusterNode.appendChild(clusterHeading);
 				
+		var closestDocFound = false;
 		cluster.documents.forEach(function(doc) {
 			var documentNode = doc.html;
-			documentNode.hidden = true;
+			if (cluster.closestDocument) {
+				documentNode.hidden = doc.id != cluster.closestDocument.id;
+				documentNode.closestDocument = doc.id == cluster.closestDocument.id;
+			} else {
+				documentNode.closestDocument = !closestDocFound;
+				closestDocFound = true;
+				documentNode.hidden = !documentNode.closestDocument;
+			}
 			clusterNode.appendChild(documentNode);
 		});
 		
@@ -578,6 +604,9 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 				};
 
 				for (var feature in features) {
+					if (features[feature].count == bestFeature.count) {
+						bestFeature.word += " " + features[feature].word;
+					};
 					if (features[feature].count > bestFeature.count) {
 						bestFeature = features[feature];
 					};

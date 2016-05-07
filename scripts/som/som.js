@@ -46,7 +46,7 @@ var Som = function(_config) {
 		}
 
 		return Math.sqrt(distance);
-	};
+	};	
 
 	var max = function (_a, _b)
 	{
