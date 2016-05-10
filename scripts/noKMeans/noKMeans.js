@@ -4,6 +4,7 @@ function clusterResultsUsingNoKMeans(results, threshold)
     var clusters = [];
     var similarities = [];
     var min_index = 0;
+	results = order_results(results);
     for (var i = 0; i < results.length; i++)
     {
     	similarities = []
@@ -19,6 +20,7 @@ function clusterResultsUsingNoKMeans(results, threshold)
     			similarities.push(calc_cosine_similarity(results[i].data, clusters[j].data));
     		}
     		max_index = maximum_similarity_index(similarities);
+			results[i].similarities = similarities;
     		//console.log("Similarities:")
     		//console.log(similarities)
     		//console.log("Index: "+max_index)
@@ -26,7 +28,7 @@ function clusterResultsUsingNoKMeans(results, threshold)
     		{
     			//console.log("Accepted");
     			clusters[max_index].documents.push(results[i]);
-    			update(clusters[max_index], results[i]);
+    			update(clusters[max_index]);
     		}
     		else
     		{
@@ -75,7 +77,7 @@ function calc_cosine_similarity(frequency_list1, frequency_list2)
 		scalar1 = scalar1 + Math.pow(frequency_list1[frequency], 2);
 		scalar2 = scalar2 + Math.pow(frequency_list2[frequency], 2);
 	}
-	scalar_product = Math.sqrt(scalar1) * Math.sqrt(scalar2)
+	scalar_product = Math.sqrt(scalar1) * Math.sqrt(scalar2);
 	//Cosine Similarity
 	var cosine_similarity = dot_product/scalar_product;
 	
@@ -107,12 +109,24 @@ function maximum_similarity_index(similarities)
 	return maximum_index;
 }
 
-function update(cluster, document)
-{
+function update(cluster)
+{	
+	//console.log(cluster);
+	var average_term_frequency = 0;
 	for (var frequency in cluster.data)
 	{
-		cluster.data[frequency] = (cluster.data[frequency] + document.data[frequency])/2;
+		average_term_frequency = 0;
+		for (var i = 0; i < cluster.documents.length; i++)
+		{
+			average_term_frequency = average_term_frequency + cluster.documents[i].data[frequency];
+		}
+		average_term_frequency = average_term_frequency/cluster.documents.length;
+		cluster.data[frequency] = average_term_frequency;
 	}
+	//for (var frequency in cluster.data)
+	//{
+	//	cluster.data[frequency] = (cluster.data[frequency] + document.data[frequency])/2;
+	//}
 }
 
 function clone_object(obj) 

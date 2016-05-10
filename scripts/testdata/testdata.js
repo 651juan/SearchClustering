@@ -24,6 +24,23 @@ function getTestDataResults(filename){
 		var dTitle = doc[i].getAttribute('title');
 		var dContent = doc[i].children[0].textContent;
 		
+		//console.log("Before: ", dContent);
+		var elem = document.createElement('textarea');
+		elem.innerHTML = dTitle;
+		dTitle = elem.value;
+		var div = document.createElement("div");
+		div.innerHTML = dTitle;
+		dTitle = div.textContent || div.innerText || "";
+		
+		elem = document.createElement('textarea');
+		elem.innerHTML = dContent;
+		dContent = elem.value;
+		div = document.createElement("div");
+		div.innerHTML = dContent;
+		dContent = div.textContent || div.innerText || "";
+		
+		//console.log("After: ", dContent);
+		
 		//Main div
 		var gDiv = document.createElement('div');
 		gDiv.className = "g";

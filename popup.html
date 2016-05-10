@@ -7,17 +7,18 @@
 		<div id="algorithmSelect">
 			<div>
 				<select id="algorithmChoice">
-					<option value="km" selected>K-Means</option>
-					<option value="nkm">No-K-Means</option>
-					<option value="gmm">Gaussian Mixture Models</option>
+					<option value="km">K-Means</option>
+					<option value="nkm" selected>No-K-Means</option>
 					<option value="som">Self-Organising Maps</option>
 				</select> 
 			</div>
-			
 			<br/>
-			
-			<div id="textAnalysisSettings">
-				<input type="checkbox" id="useTestData" value="useTestData"> <label for="useTestData">Use Test Data</label> 
+			<div id="buttonDiv">
+				<button id="clusterBtn">Cluster Results</button>
+			</div>
+						
+			<div id="textAnalysisSettings" class="hide">
+				<input type="checkbox" id="useTestData" value="useTestData" checked> <label for="useTestData">Use Test Data</label> 
 				<br/>
 				<input type="checkbox" id="includeTitle" value="includeTitle" checked> <label for="includeTitle">Include Title</label> 
 				<br/>
@@ -33,32 +34,31 @@
 				<br/>
 				<input type="checkbox" id="removeShortWords" value="removeShortWords"> <label for="removeShortWords">Remove Short Words</label> 
 				<br/>
-				<input type="checkbox" id="removeSingleDocumentTerms" value="removeSingleDocumentTerms" checked> <label for="removeSingleDocumentTerms">Remove Terms in Single Documents</label> 
+				<input type="checkbox" id="removeSingleDocumentTerms" value="removeSingleDocumentTerms"> <label for="removeSingleDocumentTerms">Remove Terms in Single Documents</label> 
 				<br/>
 				<input type="checkbox" id="stemWords" value="stemWords" checked> <label for="stemWords">Stem Words</label> 
 				<br/>
 				<input type="checkbox" id="showFeatures" value="showFeatures"> <label for="showFeatures">Show Cluster Features</label> 
 				<br/>
-				<input type="checkbox" id="showResults" value="showResults"> <label for="showResults">Show Semeval Results</label> 
+				<input type="checkbox" id="showResults" value="showResults" checked> <label for="showResults">Show Semeval Results</label> 
+				<br/>
+				<input type="checkbox" id="showClusters" value="showClusters"> <label for="showClusters">Show Clusters in Console</label> 
 			</div>
 			
-			<br/>
-			
-			<div id="kmSettings" class="show">
+			<div id="kmSettings" class="hide">
+				<input type="checkbox" id="useWikipedia" value="useWikipedia" checked> <label for="useWikipedia">Use Wikipedia Articles</label> 
+				<br/><br/>
 				<input type="number" id="noOfClusters" name="clusters" min="1" max="100" step="1" value="5"> <label for="noOfClusters">No of Clusters (Kmeans) </label> 
 			</div>
 			
 			<div id="nkmSettings" class="hide">
 				<input type="number" id="nkmThreshold" name="thresh" min="0" max="1" step="0.01" value="0.05"> <label for="nkmThreshold">Threshold</label> 
 			</div>
-			
-			<div id="gmmSettings" class="hide">
-			</div>
-				
+					
 			<div id="somSettings" class="hide">
-				<input type="number" id="networkIterations" name="networkIterations" min="1" max="1000" step="1" value="100"> <label for="networkIterations">Number of Iterations</label> 
+				<input type="number" id="networkIterations" name="networkIterations" min="1" max="1000" step="1" value="25"> <label for="networkIterations">Number of Iterations</label> 
 				<br/>
-				<input type="number" id="networkLearningRate" name="networkLearningRate" min="0" max="1" step="0.05" value="0.2"> <label for="networkLearningRate">Learning Rate</label> 
+				<input type="number" id="networkLearningRate" name="networkLearningRate" min="0" max="1" step="0.05" value="0.1"> <label for="networkLearningRate">Learning Rate</label> 
 				<br/>
 				<input type="number" id="networkWidth" name="networkWidth" min="1" max="1000" step="1" value="5"> <label for="networkWidth">Network Width</label> 
 				<br/>
@@ -66,9 +66,6 @@
 				<br/>
 			</div>
 			
-			<br/>
-			
-			<button id="clusterBtn">Cluster Results</button>
 		</div>
 		
 		<script src="scripts/popup.js" type="text/javascript"></script>

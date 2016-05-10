@@ -502,6 +502,20 @@ require.define("/distance.js", function (require, module, exports, __dirname, __
       }
       return Math.sqrt(total);
    },
+   cosineSim: function(v1, v2) {
+	   var dotProd = 0;
+	   var d1 = 0;
+	   var d2 = 0;
+	   for(var i = 1; i < v1.length; i++) {
+			d1 += Math.pow(v1[i],2);
+			d2 += Math.pow(v2[i],2);
+			dotProd += (v1[i]*v2[i]);
+		}
+		d1 = Math.sqrt(d1);
+		d2 = Math.sqrt(d2);
+		var denom = d1*d2;
+		return 1-(dotProd/denom);
+	},
    manhattan: function(v1, v2) {
      var total = 0;
      for (var i = 1; i < v1.length ; i++) {
@@ -561,19 +575,29 @@ function closestDocument(documents, centroid, distance) {
 //--->points - documents to cluster
 //--->k no of clusters
 //--->distance - string to chose distance calculataion 
-function kmeans(points, k, distance, snapshotPeriod, snapshotCb) {
+function kmeans(data, k, distance, snapshotPeriod, snapshotCb) {
    distance = distance || "euclidean";
    if (typeof distance == "string") {
       distance = distances[distance];
    }
    
+   var points = data.points;
+   var initialSeeds = data.initialSeeds;
+   
    //--->Get k random vectors from the given array of vectors
-   var centroids = randomCentroids(points, k);
+   var centroids;
+   if(initialSeeds === undefined || initialSeeds.length <= 1) {
+		k = data.defaultK;
+		centroids = randomCentroids(points, k);
+   }else{
+		centroids = initialSeeds;
+   }
+   
    //--->Blank array no of documents to cluster
    var assignment = new Array(points.length);
    //---> Create an array of K empty clusters
    var clusters = new Array(k);
-
+   
    //--->No of iterations
    var iterations = 0;   
    //--->Checks if any documents moved

@@ -1,9 +1,27 @@
+var Node = function(_config) {
+	this.neighbors = {};
+	
+	if (!_config.weights)
+	{
+		throw Error('Provide weights for initialization of a node in the map');
+	}
 
-//var _ = require('underscore');
-var Som = function(_config)
-{
+	this.weights = _config.weights;
+	
+	this.i = _config.i;
+	this.x = _config.x;
+	this.y = _config.y;
+};
+
+Node.prototype.add = function(_id, _vector, _category) {
+	var category = _category||'default';
+	this.neighbors[category] = this.neighbors[category]||[]; 
+	this.neighbors[category].push({id: _id});
+};
+
+var Som = function(_config) {
 	var that = this;
-	var config = _config ||{};
+	var config = _config || {};
 	
 	var euclideanDistance = function(_vector1, _vector2)
 	{
@@ -28,7 +46,7 @@ var Som = function(_config)
 		}
 
 		return Math.sqrt(distance);
-	};
+	};	
 
 	var max = function (_a, _b)
 	{
@@ -42,7 +60,7 @@ var Som = function(_config)
 	this.initialRadius = config.initialRadius || max(this.width, this.height)/2;
 	this.iterationCount = config.iterationCount;
 	this.initialLearningRate = config.initialLearningRate || 0.1;
-	this.initialRange = config.initialRange || 1;
+	this.scale = config.scale || 1;
 
 	this.features = {};
 
@@ -68,31 +86,7 @@ var Som = function(_config)
 	this.nodeList = [];
 };
 
-var Node = function(_config)
-{
-	this.neighbors = {};
-	
-	if (!_config.weights)
-	{
-		throw Error('Provide weights for initialization of a node in the map');
-	}
-
-	this.weights = _config.weights;
-	
-	this.i = _config.i;
-	this.x = _config.x;
-	this.y = _config.y;
-};
-
-Node.prototype.add = function(_id, _vector, _category)
-{
-	var category = _category||'default';
-	this.neighbors[category] = this.neighbors[category]||[]; 
-	this.neighbors[category].push({id: _id});
-};
-
-Som.prototype.prepareNode = function(_features, _vector)
-{
+Som.prototype.prepareNode = function(_features, _vector) {
 	var weights = [];
 
 	_features.forEach(function(_feature)
@@ -115,13 +109,11 @@ Som.prototype.prepareNode = function(_features, _vector)
 	return new Node({weights: weights});
 };
 
-Som.prototype.index = function(_id, _node)
-{
+Som.prototype.index = function(_id, _node) {
 	this.traineeIndex[_id] = _node;
 };
 
-Som.prototype.neighbors = function(_id, _radius)
-{
+Som.prototype.neighbors = function(_id, _radius) {
 	var that = this;
 	var neighbors = [];
 
@@ -174,8 +166,7 @@ Som.prototype.neighbors = function(_id, _radius)
 	return neighbors;
 };
 
-Som.prototype.train = function(_id, _vector)
-{
+Som.prototype.train = function(_id, _vector) {
 	var that = this;
 	
 	var currentIteration = this.currentIteration;
@@ -227,10 +218,70 @@ Som.prototype.train = function(_id, _vector)
 			}
 		}
 	});
+	
+	console.log(currentIteration, learningRate, radius);
 };
 
-Som.prototype.bestMatchingUnit = function(_vector)
-{
+Som.prototype.trainBatch = function(results) {
+	var that = this;
+	
+	var currentIteration = this.currentIteration;
+
+	if (currentIteration > this.iterationCount)
+	{
+		console.log('ERROR');
+		throw Error('Cannot train anymore ... current iteration is greater than the expected iteration count of: ' + this.iterationCount);
+	}
+	
+	this.currentIteration += 1;
+
+	var determineLocalRadius = function(_iteration)
+	{
+		var timeConstant = that.iterationCount/Math.log(that.initialRadius);
+		
+		return that.initialRadius * Math.exp(-(_iteration/timeConstant));
+	};
+
+	var determineLearningRate = function(_iteration)
+	{
+		return that.initialLearningRate * Math.exp(-(_iteration/that.iterationCount));
+	};
+
+	var radius = determineLocalRadius(currentIteration);
+	var learningRate = determineLearningRate(currentIteration);
+	for (var i = 0; i < results.length; i++) {
+		var _id = i;
+		var _vector = results[i].data;
+		
+		var bestMatchingNode = this.bestMatchingUnit(_vector);
+		//bestMatchingNode.add(_id, _vector);
+		this.index(_id, bestMatchingNode);
+		
+		this.nodeList.forEach(function(_node)
+		{
+			var distance = that.distanceFunction([bestMatchingNode.x, bestMatchingNode.y], [_node.x, _node.y]);
+
+			if (distance < radius)
+			{
+				//adjust weights for this _node
+
+				var influence = Math.exp(-(distance/2 * radius));
+				if (influence <= 0) { influence = 1; }
+
+				for (var feature in that.features)
+				{
+					var featureIndex = that.features[feature];
+					var vectorFeature = _vector[feature]||0;
+					_node.weights[featureIndex] = _node.weights[featureIndex] + (influence * learningRate * (vectorFeature - _node.weights[featureIndex]));
+				}
+			}
+		});
+		
+		//console.log(currentIteration, learningRate, radius);
+	};
+};
+
+Som.prototype.bestMatchingUnit = function(_vector) {
 	var bestMatchingUnit = this.nodeList[0];
 	var smallestDistance = 100000000;
 	var that = this;
@@ -256,12 +307,9 @@ Som.prototype.bestMatchingUnit = function(_vector)
 	return bestMatchingUnit;
 };
 
-
-Som.prototype.init = function(_config)
-{
+Som.prototype.init = function(_config) {
 	var config = _config||{};
 	var somSize = this.width * this.height;
-	var range = this.initialRange;
 
 	var randomize = function(_features, _somSize, _scale, _precision)
 	{
@@ -271,14 +319,14 @@ Som.prototype.init = function(_config)
 		//feature count increases.
 
 		var precision = Math.pow(10, _precision)|| Math.pow(10, (Math.ceil(Math.log(_somSize)/Math.LN10) + 2));
-		var scale = _scale||1;
+		var scale = _scale || 1;
 		
 		var vector = [];
 
 		for (feature in _features)
 		{
 			var featureIndex = _features[feature];
-			vector[featureIndex] = (Math.round(Math.random() * precision)/precision) * scale * range;
+			vector[featureIndex] = (Math.round(Math.random() * precision)/precision) * scale;
 		}
 		
 		return new Node({weights: vector});
@@ -310,10 +358,19 @@ Som.prototype.init = function(_config)
 	}
 };
 
-// Train All Instances
+Som.prototype.display = function() {
+		for (var i = 0; i < this.nodeList.length; i++) {
+			console.log(this.nodeList[i].weights);
+		}
+};
+
 Som.prototype.trainAll = function(results) {
+	results = order_results(results);
+	
 	for (var i = 0; i < this.iterationCount; i++) {
-		this.train(results[i % results.length].id, results[i % results.length].data);
+		//this.train(results[i % results.length].id, results[i % results.length].data);
+		this.trainBatch(results);
+		//this.display();
 	};
 	
 	for (var doc in this.traineeIndex) {
@@ -322,13 +379,11 @@ Som.prototype.trainAll = function(results) {
 	};
 };
 
-var create = function (_config)
-{
+var create = function (_config) {
 	return new Som(_config);
 };
 
-// Get Max Occurrence
-var getMaxOccurrence = function(results) {
+var getScale = function(results) {
 	var max = 0;
 	for (result in results) {
 		for (word in results[result].data) {
@@ -340,7 +395,15 @@ var getMaxOccurrence = function(results) {
 	return max;
 };
 
-// Cluster results using SOM
+var normalise_results = function(results, scale) {
+	results.forEach(function (result) {
+		for (var feature in result.data) {
+			result.data[feature] /= scale;
+		};
+	});
+	return results;
+};
+
 var clusterResultsUsingSOM = function(results, config) {
 	var originalResults = results.slice(0, results.length);
 	// console.log("Input: ", originalResults);
@@ -358,15 +421,19 @@ var clusterResultsUsingSOM = function(results, config) {
 	var som = create({
 		features: wordList, 
 		initialLearningRate: config.networkLearningRate,
-		initialRange: getMaxOccurrence(originalResults),
-		iterationCount: config.networkIterations * results.length, 
+		iterationCount: config.networkIterations, 
 		width: config.networkWidth, 
-		height: config.networkHeight
+		height: config.networkHeight,
+		scale: 1
 	});
 	
-	som.init({});
+	som.init({
+		scale: som.scale
+	});
 	
-	som.trainAll(results);
+	results = normalise_results(results, getScale(results));
+	
+	som.trainAll(results, getScale(results));
 	
 	// Create and return clusters of documents from the organised map
 	var clusters = Array();

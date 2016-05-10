@@ -1,6 +1,5 @@
 body {
-	width: 600px;
-	height: 400px;
+
 }
 
 .hide {
@@ -9,4 +8,27 @@ body {
 
 .show {
 	display: default;
+}
+
+select {
+	padding: 5px;
+	border-radius: 3px;
+	border: solid 1px #ccc;
+}
+
+button {
+	cursor: pointer;
+	padding: 5px;
+	border-radius: 3px;
+	border: solid 1px #ccc;
+	background-color: white;
+}
+
+button:hover {
+	color: white;
+	background-color: rgba(0, 100, 175, 0.5);
+}
+
+#buttonDiv {
+	text-align: center;
 }

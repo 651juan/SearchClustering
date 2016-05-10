@@ -1,7 +1,73 @@
 // Listen to command from the popup
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		performClustering(request.config);
+		//automatedSOMTests();
 });
+
+function automatedSOMTests() {
+	var config = {
+		method: "som",
+		useTestData: true,
+		includeTitle: true,
+		includeURL: false,
+		removeQueryTerms: true,
+		removeStopWords: true,
+		removeSymbols: true,
+		removeNumbers: false,
+		removeShortWords: false,
+		removeSingleDocumentTerms: true,
+		stemWords: true,
+		showFeatures: false,
+		showResults: true,
+		showClusters: false,
+		som: {}
+	};
+	var soms = [];
+	for (var i = 3; i <= 10; i++) {
+		for (var j = 5; j <= 20; j+=3) {
+			var som = {
+				networkIterations: j,
+				networkLearningRate: 0.1,
+				networkWidth: i,
+				networkHeight: i
+			};
+			soms.push(som);
+		};
+	};
+	for (var i = 11; i <= 25; i+=2) {
+		for (var j = 5; j <= 10; j++) {
+			var som = {
+				networkIterations: j,
+				networkLearningRate: 0.1,
+				networkWidth: i,
+				networkHeight: i
+			};
+			soms.push(som);
+		}
+	};
+	// for (var i = 3; i <= 8; i++) {
+		// for (var j = 5; j <= 10; j++) {
+			// for (var k = 0.05; k <= 0.2; k+=0.5) {
+				// var som = {
+					// networkIterations: j,
+					// networkLearningRate: k,
+					// networkWidth: i,
+					// networkHeight: i
+				// };
+				// soms.push(som);
+			// };
+		// };
+	// };
+	for (var som in soms) {
+		config.som = soms[som];
+		console.log("----------");
+		console.log("Epochs:", config.som.networkIterations),
+		console.log("Learning Rate:", config.som.networkLearningRate),
+		console.log("Network Width:", config.som.networkWidth),
+		console.log("----------");
+		performClustering(config);
+	};
+};
 
 //Performs clustering of the results on the Google page according to the configuration provided
 function performClustering(clusteringConfig) {
@@ -18,20 +84,22 @@ function performClustering(clusteringConfig) {
 			//Add the query (filename) to the config for easy access
 			clusteringConfig.testDataQuery = subject;
 			var results = getSearchResults(clusteringConfig, fileName);
-			
 			//csvHelper(results);
-	
+			
 			if (results.length > 0) {
 				var clusters = getClusters(results, clusteringConfig);
 				clusterGoogleResults(clusters, clusteringConfig, iteration);
 			}
 			
-			//console.log(clusters);
+			if (clusteringConfig.showClusters) {
+				console.log(clusters);
+			}
+			
 			//console.log("Results clustered.");
 			iteration++;
 		};
 	} else {
-		console.log("Clustering results using ", clusteringConfig.method);
+		//console.log("Clustering results using ", clusteringConfig.method);
 		
 		var results = getSearchResults(clusteringConfig, null);
 		
@@ -40,8 +108,10 @@ function performClustering(clusteringConfig) {
 			clusterGoogleResults(clusters, clusteringConfig, 0);
 		}
 		
-		console.log(clusters);
-		console.log("Results clustered.");
+		if (clusteringConfig.showClusters) {
+			console.log(clusters);
+		}
+		//console.log("Results clustered.");
 	};
 };
 
@@ -50,7 +120,7 @@ function getClusters(results, config) {
 	// Automatically cluster results using SOM and display clusters in the Google Results page
 	switch (config.method) {
 		case "km": 
-			return clusterResultsUsingKMeans(results, config.km.noOfClusters); 
+			return clusterResultsUsingKMeans(results); 
 		case "nkm":
 			return clusterResultsUsingNoKMeans(results, config.nkm.threshold);
 		case "gmm":
@@ -73,15 +143,15 @@ function getSearchResults(config, fileName, iteration) {
 	var removeShortWords = config.removeShortWords;
 	var removeSingleDocumentTerms = config.removeSingleDocumentTerms;
 	var queryNumber = iteration;
-
+	
 	//Splits string by " " and stores it in an object
-	var processString = function(toProcess) {
+	var processString = function(toProcess) {			
 		//Split the string andd store the result in an array of individual words
 		var words = toProcess.split(" ");
 		var queryTerms = "";
 		if(useTestData){
 			queryTerms = config.testDataQuery.split("_");
-		}else{
+		} else {
 			queryTerms = getQuery().split(" ");
 		}
 		
@@ -146,12 +216,12 @@ function getSearchResults(config, fileName, iteration) {
 			
 			if(removeStopWords) {
 				//If it is not a stop word concat it with the result
-				if(stopwords.indexOf(words[i]) < 0 && urlStopwords.indexOf(words[i]) < 0) {
+				if(stopwords.indexOf(words[i]) < 0 && stemmedStopWords.indexOf(words[i]) < 0) {
 					if(removeShortWords) {
 						if(words[i].length >= 3) {
 							result += words[i]+" ";
 						}
-					}else{
+					} else{
 						result += words[i]+" ";
 					}
 				}
@@ -165,7 +235,6 @@ function getSearchResults(config, fileName, iteration) {
 				}
 			}
 		}
-		
 		return result;
 	}
 	
@@ -235,11 +304,11 @@ function getSearchResults(config, fileName, iteration) {
 				
 				//Remove symbols
 				if(removeSymbols){
-					tmpTitle = tmpTitle.replace(/[^a-zA-Z0-9\s]/g, "");
+					tmpTitle = tmpTitle.replace(/[^a-zA-Z0-9\s]/g, " ");
 				}
 				//Remove Numbers
 				if(removeNumbers) {
-					tmpTitle = tmpTitle.replace(/[\d+]/g, "");
+					tmpTitle = tmpTitle.replace(/[\d+]/g, " ");
 				}
 				
 				result.wordReference = getWordReference(result.originalReference, tmpTitle);
@@ -266,7 +335,7 @@ function getSearchResults(config, fileName, iteration) {
 				}
 				//Remove Numbers
 				if(removeNumbers) {
-					tmpUrl = tmpUrl.replace(/[\d+]/g, "");
+					tmpUrl = tmpUrl.replace(/[\d+]/g, " ");
 				}
 				
 				result.wordReference = getWordReference(result.originalReference, tmpUrl);
@@ -286,13 +355,20 @@ function getSearchResults(config, fileName, iteration) {
 			try{
 				//Convert it to lowercase
 				var tmpContent = getContent(results[i]).toLowerCase();
+				
+				var dateString = tmpContent.substr(0, 12);
+				var date = new Date(dateString);
+				if (!isNaN(date.getTime())) {
+					//tmpContent = tmpContent.substr(12, tmpContent.length);
+				}
+				
 				//Remove symbols
 				if(removeSymbols){
-					tmpContent = tmpContent.replace(/[^a-zA-Z0-9\s]/g, "");
+					tmpContent = tmpContent.replace(/[^a-zA-Z0-9\s]/g, " ");
 				}
 				//Remove Numbers
 				if(removeNumbers) {
-					tmpContent = tmpContent.replace(/[\d+]/g, "");
+					tmpContent = tmpContent.replace(/[\d+]/g, " ");
 				}
 				
 				result.wordReference = getWordReference(result.originalReference, tmpContent);
@@ -378,7 +454,7 @@ function getSearchResults(config, fileName, iteration) {
 				};
 			};		
 		};
-		
+		//console.log(wordsHistogram);
 		// Remove from histogram those words which appear in only one document
 		for (var word in wordsHistogram) {
 			if (wordsHistogram[word] == 1) {
@@ -456,31 +532,44 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 		var showHideClusterDiv = document.createElement("div");
 		showHideClusterDiv.style.cssText = "text-align:right;display:inline-block;width:50%;";
 		
-		var showHideCluster = document.createElement("button");
-		showHideCluster.innerHTML = "Expand Cluster";
-		showHideCluster.onclick = function() {
-			var docs = clusterNode.getElementsByClassName("g");
-			for (var doc in docs) {
-				docs[doc].hidden = !docs[doc].hidden;
+		findSimilarDiv.appendChild(findSimilar);
+		clusterHeading.appendChild(findSimilarDiv);
+		
+		if (cluster.documents.length > 1) {
+			var showHideCluster = document.createElement("button");
+			showHideCluster.innerHTML = "Expand Cluster";
+			showHideCluster.onclick = function() {
+				var docs = clusterNode.getElementsByClassName("g");
+				for (var doc in docs) {
+					docs[doc].hidden = !docs[doc].hidden; 
+					if (docs[doc].closestDocument) {
+						docs[doc].hidden = false;
+					};
+				};
+				if (showHideCluster.innerHTML == "Collapse Cluster") {
+					showHideCluster.innerHTML = "Expand Cluster";
+				} else {
+					showHideCluster.innerHTML = "Collapse Cluster";
+				}
 			};
-			if (showHideCluster.innerHTML == "Collapse Cluster") {
-				showHideCluster.innerHTML = "Expand Cluster";
-			} else {
-				showHideCluster.innerHTML = "Collapse Cluster";
-			}
+			showHideClusterDiv.appendChild(showHideCluster);
+			clusterHeading.appendChild(showHideClusterDiv);
 		};
 		
-		findSimilarDiv.appendChild(findSimilar);
-		showHideClusterDiv.appendChild(showHideCluster);
-		
-		clusterHeading.appendChild(findSimilarDiv);
-		clusterHeading.appendChild(showHideClusterDiv);
 		
 		clusterNode.appendChild(clusterHeading);
 				
+		var closestDocFound = false;
 		cluster.documents.forEach(function(doc) {
 			var documentNode = doc.html;
-			documentNode.hidden = true;
+			if (cluster.closestDocument) {
+				documentNode.hidden = doc.id != cluster.closestDocument.id;
+				documentNode.closestDocument = doc.id == cluster.closestDocument.id;
+			} else {
+				documentNode.closestDocument = !closestDocFound;
+				closestDocFound = true;
+				documentNode.hidden = !documentNode.closestDocument;
+			}
 			clusterNode.appendChild(documentNode);
 		});
 		
@@ -515,6 +604,9 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 				};
 
 				for (var feature in features) {
+					if (features[feature].count == bestFeature.count) {
+						bestFeature.word += " " + features[feature].word;
+					};
 					if (features[feature].count > bestFeature.count) {
 						bestFeature = features[feature];
 					};
