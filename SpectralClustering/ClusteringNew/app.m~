@@ -1,0 +1,29 @@
+function app
+
+for i = 1:100
+    d = csvread(sprintf('./New100Results/%d.csv',i));
+
+    for k = 2:20
+        [clusters, evalues, evectors] = spcl(d, k, 5, 'kmean', [2 2]);    
+        di(k-1) = DunnsIndex(d,clusters);
+    end
+end
+
+function d = DunnsIndex(data,clusteridx)
+
+% Compute intra variance
+intra = 0;
+N = size(data,1);
+for i = 1:max(clusteridx)    
+    samples = data(clusteridx == i,:);
+    mu(i,:) = mean(samples,1);
+    for j = 1:size(samples,1)
+        intra = intra + norm(samples(j,:) - mu(i,:));
+    end    
+end
+intra = intra / N;
+
+% Computer inter variance
+inter = min(pdist(mu));
+
+d = intra/inter;
