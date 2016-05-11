@@ -132,5 +132,5 @@ average Jaccard Index = 0.3217504350202588
 ================ Statistics: ====================================
 ============ average number of created clusters: 7.07
 ============ average cluster size: 14.07782877184734
-Simulation started at: 15:01 and completed at 15:02
-Execution time: 4.907 sec
+Simulation started at: 14:30 and completed at 14:30
+Execution time: 5.438 sec

@@ -1,5 +1,5 @@
 [ INFO  ] Configuration - Loading /eval.properties FROM C:\dev\searchCluster\SearchClustering\SpectralClustering\ClusteringNew\evaluate\config\eval.properties
-[ INFO  ] WSIEvaluator - Run started at 15:02
+[ INFO  ] WSIEvaluator - Run started at 14:30
 [ INFO  ] Dataset - Loading the dataset  
 [ INFO  ] Dataset - Loading the topics data dataset
 [ INFO  ] Dataset - Loading the subtopics data
@@ -3666,5 +3666,5 @@ average Jaccard Index = 0.3159904542536889
 ============ average number of created clusters: 6.17
 ============ average cluster size: 15.372644805486908
 
-[ WARN  ] WSIEvaluator - Simulation started at: 15:02 and completed at 15:02
-Execution time: 3.501 sec
+[ WARN  ] WSIEvaluator - Simulation started at: 14:30 and completed at 14:30
+Execution time: 4.485 sec

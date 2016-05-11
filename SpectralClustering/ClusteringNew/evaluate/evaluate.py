@@ -15,7 +15,7 @@ try:
 except OSError as exception:
     print "Error creating results directory"
 
-with open("ResultsE.csv", 'wb') as globalResultsFile:
+with open("ResultsPBME.csv", 'wb') as globalResultsFile:
     globalResultsWriter = csv.writer(globalResultsFile, dialect='excel')
     globalResultsWriter.writerow(['Sigma', 'Average F1', 'Average Rand Index', 'Average Adj Rand Index', 'Average Jaccard Index', 'Average Number of Clusters', 'Average Cluster Size'])
     # For each file in filelist run evaluator and copy log file into logs
