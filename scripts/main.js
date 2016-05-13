@@ -517,20 +517,21 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 		var clusterFeatures = extractClusterFeatures(cluster);
 			
 		var clusterHeading = document.createElement("div");
+		clusterHeading.style.cssText = "margin-bottom:10px;border-radius:5px;padding:3px;";
 		
 		var moreLikeThisQuery = getMoreLikeThisQuery(clusterFeatures);
 		//var originalQuery = encodeURIComponent(getQuery());
 		var originalQuery = getOriginalQuery();
 		
 		var findSimilarDiv = document.createElement("div");
-		findSimilarDiv.style.cssText = "text-align:left;display:inline-block;width:50%;";
+		findSimilarDiv.style.cssText = "text-align:left;display:inline-block;width:80%;font-weight:bold;";
 		
 		var findSimilar = document.createElement("a");
 		findSimilar.innerHTML = "Similar: " + moreLikeThisQuery;
 		findSimilar.href = location.href.replace("q="+originalQuery, "q="+encodeURIComponent(moreLikeThisQuery));
 		
 		var showHideClusterDiv = document.createElement("div");
-		showHideClusterDiv.style.cssText = "text-align:right;display:inline-block;width:50%;";
+		showHideClusterDiv.style.cssText = "text-align:right;display:inline-block;width:20%;";
 		
 		findSimilarDiv.appendChild(findSimilar);
 		clusterHeading.appendChild(findSimilarDiv);
@@ -538,6 +539,7 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 		if (cluster.documents.length > 1) {
 			var showHideCluster = document.createElement("button");
 			showHideCluster.innerHTML = "Expand Cluster";
+			showHideCluster.style.cssText = "border-radius:5px;background-color:#eee;cursor:pointer;";
 			showHideCluster.onclick = function() {
 				var docs = clusterNode.getElementsByClassName("g");
 				for (var doc in docs) {
@@ -643,6 +645,12 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 	for (var i = 0; i < clusters.length; i++) {
 		resultsDiv.appendChild(getClusterHtml(clusters[i]));
 	};
+	
+	var resultStatsDiv = document.getElementById("resultStats");
+	var clusterStats = document.getElementById("clusterStats") || document.createElement("nobr");
+	clusterStats.id = "clusterStats";
+	clusterStats.innerHTML = "| Results clustered in " + clusters.length + " clusters";
+	resultStatsDiv.appendChild(clusterStats);
 	
 	outputClustersInDatasetFormat(clusters);
 };
