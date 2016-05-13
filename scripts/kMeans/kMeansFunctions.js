@@ -49,9 +49,9 @@ function clusterObjects(resultObjects, vectorClusters) {
 }
 
 function clusterResultsUsingKMeans(resultObjects, useWikiArticles) {
-	defaultK = 5;
+	defaultK = 7;
 	if(useWikiArticles === undefined) {
-		useWikiArticles = false;
+		useWikiArticles = true;
 	}
 
 	var data = {}
