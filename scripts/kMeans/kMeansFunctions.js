@@ -48,8 +48,8 @@ function clusterObjects(resultObjects, vectorClusters) {
 	return clusters;
 }
 
-function clusterResultsUsingKMeans(resultObjects, useWikiArticles) {
-	defaultK = 7;
+function clusterResultsUsingKMeans(resultObjects, dK, useWikiArticles) {
+	defaultK = dK;
 	if(useWikiArticles === undefined) {
 		useWikiArticles = true;
 	}
@@ -158,10 +158,9 @@ function clusterResultsUsingKMeans(resultObjects,defaultK, useWikiArticles) {
 	clusters = clustersResults[maxIdx];
 
 	return clusterObjects(resultObjects, clusters);
-}
-*/
-//Dunns Index  Functions
+}*/
 
+//Dunns Index  Functions
 function dunnsIndex(data, clusters){		
 	//Computer intra variance
 	var intra = 0;

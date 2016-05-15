@@ -2,7 +2,18 @@
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		performClustering(request.config);
 		//automatedSOMTests();
+		//automatedKMeansTests(request.config);
 });
+
+function automatedKMeansTests(config) {
+	for(var i = 2; i <= 20; i++) {
+			config.km.noOfClusters = i;
+			console.log("----------");
+			console.log("K:", i),
+			console.log("----------");
+			performClustering(config);
+	}
+}
 
 function automatedSOMTests() {
 	var config = {
@@ -120,7 +131,7 @@ function getClusters(results, config) {
 	// Automatically cluster results using SOM and display clusters in the Google Results page
 	switch (config.method) {
 		case "km": 
-			return clusterResultsUsingKMeans(results, config.km.useWikipedia); 
+			return clusterResultsUsingKMeans(results, config.km.noOfClusters, config.km.useWikipedia); 
 		case "nkm":
 			return clusterResultsUsingNoKMeans(results, config.nkm.threshold);
 		case "gmm":
