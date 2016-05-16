@@ -1,15 +1,45 @@
 // Listen to command from the popup
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		performClustering(request.config);
+		//automatedNoKMeansTests();
 		//automatedSOMTests();
 		//automatedKMeansTests(request.config);
 });
+
+function automatedNoKMeansTests(config)	{
+	var config = {
+		method: "nkm",
+		useTestData: true,
+		includeTitle: true,
+		includeURL: false,
+		removeQueryTerms: true,
+		removeStopWords: true,
+		removeSymbols: true,
+		removeNumbers: false,
+		removeShortWords: false,
+		removeSingleDocumentTerms: false,
+		stemWords: true,
+		showFeatures: false,
+		showResults: true,
+		showClusters: false,
+		nkm: {threshold: 0.00}
+	};
+	var i = 0.00;
+	while (i <= 1.00)	{
+		config.nkm.threshold = i;
+		console.log("----------");
+		console.log("Threshold:", config.nkm.threshold);
+		console.log("----------");
+		performClustering(config);
+		i += 0.01;
+	}
+}
 
 function automatedKMeansTests(config) {
 	for(var i = 2; i <= 20; i++) {
 			config.km.noOfClusters = i;
 			console.log("----------");
-			console.log("K:", i),
+			console.log("K:", i);
 			console.log("----------");
 			performClustering(config);
 	}

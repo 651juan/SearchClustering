@@ -3,12 +3,11 @@ function clusterResultsUsingNoKMeans(results, threshold)
 	//console.log(threshold);
     var clusters = [];
     var similarities = [];
-    var min_index = 0;
+    var max_index = 0;
 	results = order_results(results);
     for (var i = 0; i < results.length; i++)
     {
     	similarities = []
-    	min_index = 0;
     	if (clusters.length == 0)
     	{
     		clusters.push(new_cluster([results[i]], clusters.length, clone_object(results[i].data)));
@@ -20,7 +19,6 @@ function clusterResultsUsingNoKMeans(results, threshold)
     			similarities.push(calc_cosine_similarity(results[i].data, clusters[j].data));
     		}
     		max_index = maximum_similarity_index(similarities);
-			results[i].similarities = similarities;
     		//console.log("Similarities:")
     		//console.log(similarities)
     		//console.log("Index: "+max_index)
