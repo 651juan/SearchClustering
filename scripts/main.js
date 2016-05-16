@@ -115,7 +115,14 @@ function performClustering(clusteringConfig) {
 		var results = getSearchResults(clusteringConfig, null);
 		
 		if (results.length > 0) {
+			//Log start time
+			var start = new Date().getTime();
+			//Start clustering
 			var clusters = getClusters(results, clusteringConfig);
+			//Log end time
+			var end = new Date().getTime();
+			//Result 
+			clusteringConfig.timeTaken = end - start;
 			clusterGoogleResults(clusters, clusteringConfig, 0);
 		}
 		
@@ -660,7 +667,7 @@ function clusterGoogleResults(clusters, config, queryNumber) {
 	var resultStatsDiv = document.getElementById("resultStats");
 	var clusterStats = document.getElementById("clusterStats") || document.createElement("nobr");
 	clusterStats.id = "clusterStats";
-	clusterStats.innerHTML = "| Results clustered in " + clusters.length + " clusters";
+	clusterStats.innerHTML = "| Results clustered in " + clusters.length + " clusters (" + (config.timeTaken/ 1000) +" seconds)";
 	resultStatsDiv.appendChild(clusterStats);
 	
 	outputClustersInDatasetFormat(clusters);
