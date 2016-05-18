@@ -48,7 +48,7 @@ function sendMessage() {
 		showResults: false,
 		showClusters: false,
 		km: {
-			noOfClusters: 7,
+			noOfClusters: 5,
 			useWikipedia: true
 		},
 		nkm: {
